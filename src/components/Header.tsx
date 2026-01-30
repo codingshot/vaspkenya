@@ -22,6 +22,8 @@ export const Header = () => {
 
   const navItems = [
     { id: 'company-selector', label: 'Types' },
+    { id: 'questionnaire', label: 'Assessment' },
+    { id: 'compliance-tracker', label: 'Tracker' },
     { id: 'regulator-comparison', label: 'CMA vs CBK' },
     { id: 'key-concepts', label: 'Concepts' },
     { id: 'bill-text', label: 'Bill' },
