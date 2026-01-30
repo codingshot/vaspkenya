@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Book, AlertCircle, Gavel, Settings, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Book, AlertCircle, Gavel, Settings, Search, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { keyConcepts, type KeyConcept } from '@/data/vaspBillData';
 
@@ -51,22 +53,22 @@ export const KeyConcepts = () => {
   ];
 
   return (
-    <section id="key-concepts" className="py-16 md:py-24 bg-muted/30">
+    <section id="key-concepts" className="py-12 md:py-20 bg-muted/30">
       <div className="container px-4 md:px-8">
-        <div className="mx-auto max-w-3xl text-center mb-12">
+        <div className="mx-auto max-w-3xl text-center mb-8 md:mb-12">
           <Badge className="mb-4 bg-accent/10 text-accent-foreground hover:bg-accent/20">
             Essential Knowledge
           </Badge>
-          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl mb-4">
+          <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
             Key Concepts & Definitions
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground">
             Understand the critical terms, obligations, penalties, and processes defined in the VASP Bill.
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 md:mb-8 space-y-4">
           <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -83,10 +85,10 @@ export const KeyConcepts = () => {
               <button
                 key={cat.value}
                 onClick={() => setCategoryFilter(cat.value)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                   categoryFilter === cat.value
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-background border border-border hover:bg-muted'
+                    : 'bg-card border border-border hover:bg-muted'
                 }`}
               >
                 {cat.label}
@@ -96,35 +98,43 @@ export const KeyConcepts = () => {
         </div>
 
         {/* Concepts Grid */}
-        <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 md:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredConcepts.map((concept, index) => {
             const config = categoryConfig[concept.category];
             return (
-              <Card 
+              <Link 
                 key={concept.id} 
-                className="animate-fade-in hover:shadow-lg transition-shadow"
-                style={{ animationDelay: `${index * 50}ms` }}
+                to={`/concept/${concept.id}`}
+                className="block"
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg font-semibold leading-tight">
-                      {concept.term}
-                    </CardTitle>
-                    <Badge className={`${config.color} flex-shrink-0 gap-1`}>
-                      {config.icon}
-                      {config.label}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {concept.definition}
-                  </p>
-                  <Badge variant="outline" className="text-xs">
-                    {concept.section}
-                  </Badge>
-                </CardContent>
-              </Card>
+                <Card 
+                  className="h-full animate-fade-in hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <CardHeader className="pb-2 md:pb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-base md:text-lg font-semibold leading-tight">
+                        {concept.term}
+                      </CardTitle>
+                      <Badge className={`${config.color} flex-shrink-0 gap-1 text-xs`}>
+                        {config.icon}
+                        <span className="hidden sm:inline">{config.label}</span>
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-xs md:text-sm text-muted-foreground mb-3 line-clamp-3">
+                      {concept.definition}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline" className="text-xs">
+                        {concept.section}
+                      </Badge>
+                      <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>
