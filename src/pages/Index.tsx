@@ -2,6 +2,7 @@ import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { CompanySelector } from '@/components/CompanySelector';
 import { CompanyQuestionnaire } from '@/components/CompanyQuestionnaire';
+import { ComplianceTracker } from '@/components/ComplianceTracker';
 import { RegulatorComparison } from '@/components/RegulatorComparison';
 import { KeyConcepts } from '@/components/KeyConcepts';
 import { BillIndex } from '@/components/BillIndex';
@@ -19,6 +20,7 @@ const Index = () => {
         <Hero />
         <CompanySelector />
         <CompanyQuestionnaire />
+        <ComplianceTracker />
         <RegulatorComparison />
         <KeyConcepts />
         <BillIndex />

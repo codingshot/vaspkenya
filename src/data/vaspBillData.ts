@@ -144,6 +144,86 @@ export const companyTypes: CompanyType[] = [
       'No misleading information'
     ],
     relevantSections: ['Section 35', 'Section 7', 'Section 41']
+  },
+  {
+    id: 'otc-desk',
+    name: 'OTC Trading Desk',
+    icon: 'Building',
+    description: 'Facilitates over-the-counter trading of virtual assets for high-value transactions outside public exchanges.',
+    regulatoryAuthority: ['Capital Markets Authority', 'Central Bank of Kenya'],
+    keyObligations: [
+      'Enhanced customer due diligence for large transactions',
+      'Price transparency requirements',
+      'Settlement risk management',
+      'Trade reporting to regulators',
+      'Maintain adequate capital reserves',
+      'AML/CFT compliance for high-value trades'
+    ],
+    relevantSections: ['Section 3', 'Section 25', 'Section 33']
+  },
+  {
+    id: 'stablecoin-issuer',
+    name: 'Stablecoin Issuer',
+    icon: 'Coins',
+    description: 'Issues stablecoins backed by fiat currency, commodities, or algorithmic mechanisms for use in Kenya.',
+    regulatoryAuthority: ['Central Bank of Kenya'],
+    keyObligations: [
+      'Maintain 1:1 reserve backing (for fiat-backed)',
+      'Regular reserve audits and disclosures',
+      'Redemption mechanisms for holders',
+      'Comply with monetary policy requirements',
+      'CBK approval for issuance',
+      'Enhanced capital requirements'
+    ],
+    relevantSections: ['Section 3', 'Section 6', 'Section 35']
+  },
+  {
+    id: 'defi-aggregator',
+    name: 'DeFi Aggregator / Front-End',
+    icon: 'Layers',
+    description: 'Provides user interfaces or aggregation services for accessing decentralized finance protocols.',
+    regulatoryAuthority: ['Capital Markets Authority'],
+    keyObligations: [
+      'Disclose protocol risks to users',
+      'Implement basic AML screening',
+      'No custody of user assets',
+      'Fair representation of yields/returns',
+      'Risk warnings for smart contract risks',
+      'Consumer education requirements'
+    ],
+    relevantSections: ['Section 3', 'Section 22', 'Section 25']
+  },
+  {
+    id: 'nft-marketplace',
+    name: 'NFT Marketplace (Financial)',
+    icon: 'Image',
+    description: 'Operates marketplace for NFTs used for investment or financial purposes (not art/collectibles only).',
+    regulatoryAuthority: ['Capital Markets Authority'],
+    keyObligations: [
+      'Determine if NFTs are used for investment',
+      'AML/KYC for high-value transactions',
+      'Platform integrity requirements',
+      'Fraud prevention measures',
+      'Consumer protection disclosures',
+      'Transaction record keeping'
+    ],
+    relevantSections: ['Section 5(2)(d)', 'Section 25', 'Section 44']
+  },
+  {
+    id: 'crypto-atm',
+    name: 'Crypto ATM Operator',
+    icon: 'Landmark',
+    description: 'Operates physical kiosks allowing purchase or sale of virtual assets for cash or mobile money.',
+    regulatoryAuthority: ['Central Bank of Kenya'],
+    keyObligations: [
+      'Physical location registration',
+      'KYC verification at point of sale',
+      'Transaction limits per user',
+      'Cash handling compliance',
+      'Real-time reporting to regulator',
+      'Machine security requirements'
+    ],
+    relevantSections: ['Section 3', 'Section 6', 'Section 33']
   }
 ];
 
@@ -184,6 +264,27 @@ export const keyConcepts: KeyConcept[] = [
     category: 'definition'
   },
   {
+    id: 'stablecoin',
+    term: 'Stablecoin',
+    definition: 'A virtual asset designed to maintain stable value relative to a fiat currency or commodity. Subject to VASP regulation if used for payment or investment in Kenya.',
+    section: 'Section 2, 3',
+    category: 'definition'
+  },
+  {
+    id: 'central-bank-digital-currency',
+    term: 'CBDC Exemption',
+    definition: 'Digital representations of fiat currency issued by the Central Bank of Kenya are explicitly excluded from virtual asset regulation under this Act.',
+    section: 'Section 5(2)(b)',
+    category: 'definition'
+  },
+  {
+    id: 'beneficial-owner',
+    term: 'Beneficial Owner',
+    definition: 'The natural person(s) who ultimately own or control the VASP, or on whose behalf a transaction is conducted. Must be identified for AML/CFT compliance.',
+    section: 'Section 33',
+    category: 'definition'
+  },
+  {
     id: 'fit-proper',
     term: 'Fit and Proper Assessment',
     definition: 'Directors, principal officers, and key persons must meet standards of probity, competence, experience, and sound judgment. Criminal history, dishonesty, or bankruptcy disqualifies individuals.',
@@ -219,6 +320,34 @@ export const keyConcepts: KeyConcept[] = [
     category: 'obligation'
   },
   {
+    id: 'travel-rule',
+    term: 'Travel Rule Compliance',
+    definition: 'VASPs must obtain, hold, and transmit required originator and beneficiary information during virtual asset transfers as required by FATF standards.',
+    section: 'Section 33',
+    category: 'obligation'
+  },
+  {
+    id: 'data-protection',
+    term: 'Data Protection Compliance',
+    definition: 'VASPs must comply with the Data Protection Act regarding customer personal data collection, storage, processing, and transfer.',
+    section: 'Section 25(h)',
+    category: 'obligation'
+  },
+  {
+    id: 'whistle-blower',
+    term: 'Whistle-Blower Protection',
+    definition: 'VASPs must establish mechanisms to protect employees who report violations or misconduct from retaliation.',
+    section: 'Section 25(k)',
+    category: 'obligation'
+  },
+  {
+    id: 'market-abuse',
+    term: 'Market Abuse Prevention',
+    definition: 'VASPs must implement measures to detect and prevent market manipulation, insider trading, and other forms of market abuse.',
+    section: 'Section 25(l)',
+    category: 'obligation'
+  },
+  {
     id: 'license-duration',
     term: 'License Duration',
     definition: 'Licenses are valid from date of issue until December 31st of the same year. Annual renewal is required.',
@@ -240,6 +369,20 @@ export const keyConcepts: KeyConcept[] = [
     category: 'process'
   },
   {
+    id: 'appeals-process',
+    term: 'Appeals Process',
+    definition: 'Aggrieved persons may appeal license refusals, revocations, suspensions, and enforcement actions to an appeals body.',
+    section: 'Section 43',
+    category: 'process'
+  },
+  {
+    id: 'enforcement-notice',
+    term: 'Enforcement Notice',
+    definition: 'Formal regulatory action requiring a VASP to rectify non-compliance within a specified period, with escalating penalties for continued violation.',
+    section: 'Section 40',
+    category: 'process'
+  },
+  {
     id: 'penalty-unlicensed',
     term: 'Penalty: Operating Without License',
     definition: 'Individuals: Up to KES 10 million fine and/or 10 years imprisonment. Companies: Up to KES 20 million fine. Plus KES 3.75 million per day for continuing offenses.',
@@ -258,6 +401,20 @@ export const keyConcepts: KeyConcept[] = [
     term: 'Penalty: Integrity Violations',
     definition: 'Failing to conduct business with integrity or violating prudent management: Up to KES 30 million fine and/or 10 years imprisonment.',
     section: 'Section 41(4)',
+    category: 'penalty'
+  },
+  {
+    id: 'penalty-aml',
+    term: 'Penalty: AML/CFT Violations',
+    definition: 'Violations of anti-money laundering requirements subject to penalties under both this Act and POCAMLA, including license revocation.',
+    section: 'Section 34, 41',
+    category: 'penalty'
+  },
+  {
+    id: 'administrative-penalty',
+    term: 'Administrative Penalties',
+    definition: 'Regulatory authorities may impose fines from KES 150,000 to KES 3 million plus daily penalties for various compliance violations.',
+    section: 'Section 40(2)',
     category: 'penalty'
   }
 ];
