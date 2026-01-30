@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { 
   ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Search, 
@@ -48,10 +48,14 @@ interface PDFRevision {
 const STORAGE_KEY = 'vasp-pdf-revisions';
 
 const PDFViewer = () => {
+  const [searchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+  const initialSearch = searchParams.get('search') || '';
+  
   const [numPages, setNumPages] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(initialPage);
   const [scale, setScale] = useState(1.0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [searchResults, setSearchResults] = useState<{page: number; text: string}[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [pdfText, setPdfText] = useState<Record<number, string>>({});
@@ -68,6 +72,13 @@ const PDFViewer = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const pdfUrl = '/documents/VASP_Bill_2025_Kenya.pdf';
+  
+  // Auto-search if URL has search param
+  useEffect(() => {
+    if (initialSearch && Object.keys(pdfText).length > 0) {
+      handleSearch();
+    }
+  }, [pdfText, initialSearch]);
 
   // Load revisions from localStorage
   useEffect(() => {
