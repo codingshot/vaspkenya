@@ -1,7 +1,8 @@
-import { FileText, Shield, Menu, X } from 'lucide-react';
+import { FileText, Shield, Menu, X, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,10 +32,6 @@ export const Header = () => {
     { id: 'faq', label: 'FAQ' },
   ];
 
-  const externalLinks = [
-    { path: '/pdf-viewer', label: 'PDF Viewer' },
-  ];
-
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 md:h-16 items-center justify-between px-4 md:px-8">
@@ -49,7 +46,7 @@ export const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-3 xl:gap-5">
+        <nav className="hidden lg:flex items-center gap-2 xl:gap-4">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -59,22 +56,34 @@ export const Header = () => {
               {item.label}
             </button>
           ))}
-          <Link to="/pdf-viewer">
-            <Button variant="default" size="sm" className="gap-2 text-xs">
-              <FileText className="h-3 w-3" />
-              PDF Viewer
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2 ml-2">
+            <Link to="/timeline">
+              <Button variant="outline" size="sm" className="gap-1 text-xs">
+                <Calendar className="h-3 w-3" />
+                Timeline
+              </Button>
+            </Link>
+            <Link to="/pdf-viewer">
+              <Button variant="default" size="sm" className="gap-1 text-xs">
+                <FileText className="h-3 w-3" />
+                PDF
+              </Button>
+            </Link>
+            <LanguageToggle />
+          </div>
         </nav>
 
         {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden p-2 -mr-2 touch-manipulation"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="lg:hidden flex items-center gap-2">
+          <LanguageToggle />
+          <button
+            className="p-2 -mr-2 touch-manipulation"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -91,12 +100,20 @@ export const Header = () => {
               </button>
             ))}
             <div className="border-t my-2" />
-            <Link to="/pdf-viewer" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="default" size="sm" className="w-full gap-2">
-                <FileText className="h-4 w-4" />
-                PDF Viewer
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              <Link to="/timeline" onClick={() => setMobileMenuOpen(false)} className="flex-1">
+                <Button variant="outline" size="sm" className="w-full gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Timeline
+                </Button>
+              </Link>
+              <Link to="/pdf-viewer" onClick={() => setMobileMenuOpen(false)} className="flex-1">
+                <Button variant="default" size="sm" className="w-full gap-2">
+                  <FileText className="h-4 w-4" />
+                  PDF Viewer
+                </Button>
+              </Link>
+            </div>
           </nav>
         </div>
       )}
