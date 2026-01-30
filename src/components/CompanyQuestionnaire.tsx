@@ -33,6 +33,17 @@ const questions: Question[] = [
     ]
   },
   {
+    id: 'custody-type',
+    question: 'Do you hold or control customer virtual assets?',
+    description: 'This determines if you are a custodial service provider',
+    options: [
+      { value: 'custodial', label: 'Yes - Custodial', description: 'We store/manage customer private keys or assets' },
+      { value: 'non-custodial', label: 'No - Non-Custodial', description: 'Users control their own keys; we just provide software' },
+      { value: 'hybrid', label: 'Hybrid/Mixed', description: 'Some custodial, some non-custodial services' },
+      { value: 'unsure', label: 'Not Sure', description: 'Need help determining custody status' },
+    ]
+  },
+  {
     id: 'services',
     question: 'What virtual asset services do you provide?',
     description: 'Select all that apply',
@@ -46,6 +57,9 @@ const questions: Question[] = [
       { value: 'advisory', label: 'Investment Advisory', description: 'Advice on virtual asset investments' },
       { value: 'management', label: 'Asset Management', description: 'Managing virtual asset portfolios' },
       { value: 'ivao', label: 'Token Issuance (IVAO)', description: 'Issuing/selling new virtual assets' },
+      { value: 'development', label: 'Software/Development Only', description: 'Building dApps, smart contracts, no financial services' },
+      { value: 'education', label: 'Education/Content Only', description: 'Teaching, courses, media about crypto' },
+      { value: 'mining', label: 'Mining Only', description: 'Crypto mining without exchange services' },
     ]
   },
   {
@@ -57,6 +71,7 @@ const questions: Question[] = [
       { value: 'institutional', label: 'Institutional Clients', description: 'Banks, funds, corporations' },
       { value: 'corporate', label: 'Corporate Clients', description: 'Businesses using crypto payments' },
       { value: 'other-vasps', label: 'Other VASPs', description: 'B2B virtual asset services' },
+      { value: 'no-clients', label: 'No Direct Clients', description: 'Open-source/infrastructure only' },
     ]
   },
   {
@@ -76,10 +91,11 @@ const questions: Question[] = [
     options: [
       { value: 'crypto', label: 'Cryptocurrencies', description: 'Bitcoin, Ethereum, etc.' },
       { value: 'stablecoins', label: 'Stablecoins', description: 'USDT, USDC, etc.' },
-      { value: 'utility-tokens', label: 'Utility Tokens', description: 'Service access tokens' },
+      { value: 'utility-tokens', label: 'Utility Tokens (Closed System)', description: 'Non-transferable service access tokens' },
       { value: 'nfts-investment', label: 'NFTs (Investment)', description: 'NFTs used for investment' },
-      { value: 'nfts-art', label: 'NFTs (Art/Collectibles)', description: 'Non-financial NFTs' },
+      { value: 'nfts-art', label: 'NFTs (Art/Collectibles Only)', description: 'Non-financial NFTs' },
       { value: 'security-tokens', label: 'Security Tokens', description: 'Tokenized securities' },
+      { value: 'none', label: 'No Assets Handled', description: 'Software/education only' },
     ]
   },
   {
@@ -104,6 +120,7 @@ const questions: Question[] = [
       { value: 'local-bank', label: 'Kenya Bank Account', description: 'Banking relationship established' },
       { value: 'insurance', label: 'Professional Insurance', description: 'Liability coverage' },
       { value: 'none', label: 'None Yet', description: 'Starting from scratch' },
+      { value: 'not-applicable', label: 'Not Applicable', description: 'May not need VASP compliance' },
     ]
   },
 ];
@@ -177,12 +194,21 @@ export const CompanyQuestionnaire = () => {
     const assetsHandled = answers['assets-handled'] as string[] || [];
     const complianceReady = answers['compliance-readiness'] as string[] || [];
     const currentStatus = answers['current-status'] as string;
+    const custodyType = answers['custody-type'] as string;
+
+    // Check for exempt activities
+    const isExemptActivity = services.every(s => 
+      ['development', 'education', 'mining', 'nfts-art'].includes(s)
+    ) || assetsHandled.every(a => ['utility-tokens', 'nfts-art', 'none'].includes(a));
+    
+    const isNonCustodial = custodyType === 'non-custodial';
 
     // Determine if license is required
     const requiresLicense = 
       jurisdiction !== 'global-no-kenya' && 
       services.length > 0 &&
-      !services.every(s => s === 'nfts-art');
+      !isExemptActivity &&
+      !isNonCustodial;
 
     // Determine eligibility
     const eligibleForLicense = 
@@ -190,11 +216,13 @@ export const CompanyQuestionnaire = () => {
 
     // Determine regulators
     const regulators: string[] = [];
-    if (services.some(s => ['custody', 'exchange', 'transfer', 'payment'].includes(s))) {
-      regulators.push('Central Bank of Kenya (CBK)');
-    }
-    if (services.some(s => ['brokerage', 'advisory', 'management', 'ivao', 'exchange'].includes(s))) {
-      regulators.push('Capital Markets Authority (CMA)');
+    if (requiresLicense) {
+      if (services.some(s => ['custody', 'exchange', 'transfer', 'payment'].includes(s))) {
+        regulators.push('Central Bank of Kenya (CBK)');
+      }
+      if (services.some(s => ['brokerage', 'advisory', 'management', 'ivao', 'exchange'].includes(s))) {
+        regulators.push('Capital Markets Authority (CMA)');
+      }
     }
 
     // Risk assessment

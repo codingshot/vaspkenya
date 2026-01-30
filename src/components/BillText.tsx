@@ -155,12 +155,20 @@ export const BillText = () => {
                           </Badge>
                         ))}
                       </div>
-                      <Link to={`/bill/${section.id}`}>
-                        <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm w-full sm:w-auto">
-                          View Full Section
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
-                      </Link>
+                      <div className="flex gap-2">
+                        <Link to={`/pdf-viewer?page=${section.id.includes('part1') ? 2 : section.id.includes('part2') ? 4 : section.id.includes('part3') ? 6 : section.id.includes('part4') ? 10 : section.id.includes('part5') ? 17 : section.id.includes('part6') ? 17 : section.id.includes('part7') ? 19 : 21}&search=${encodeURIComponent(section.title.split(' ').slice(0, 3).join(' '))}`}>
+                          <Button variant="default" size="sm" className="gap-2 text-xs md:text-sm">
+                            View in PDF
+                            <FileText className="h-3 w-3" />
+                          </Button>
+                        </Link>
+                        <Link to={`/bill/${section.id}`}>
+                          <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                            Details
+                            <ExternalLink className="h-3 w-3" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </CardContent>
                 </CollapsibleContent>

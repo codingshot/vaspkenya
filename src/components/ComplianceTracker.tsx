@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   CheckCircle2, Circle, Clock, Save, RotateCcw, 
-  Building2, Shield, FileText, Users, Wallet, AlertTriangle, Download
+  Building2, Shield, FileText, Users, Wallet, AlertTriangle, Download,
+  ExternalLink, ChevronRight, Book
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { complianceResources, getResourcesForItem } from '@/data/complianceResources';
 
 interface ComplianceItem {
   id: string;
@@ -21,203 +24,35 @@ interface ComplianceItem {
 
 const complianceItems: ComplianceItem[] = [
   // Entity Requirements
-  {
-    id: 'entity-1',
-    title: 'Company Incorporation',
-    description: 'Incorporate under the Companies Act (Cap. 486) or obtain Certificate of Compliance for foreign companies',
-    section: 'Section 3, 9',
-    priority: 'critical',
-    category: 'entity'
-  },
-  {
-    id: 'entity-2',
-    title: 'Registered Office in Kenya',
-    description: 'Establish and maintain a registered office in Kenya',
-    section: 'Section 20',
-    priority: 'critical',
-    category: 'entity'
-  },
-  {
-    id: 'entity-3',
-    title: 'Kenya Bank Account',
-    description: 'Open and maintain a bank account in Kenya',
-    section: 'Section 25(g)',
-    priority: 'high',
-    category: 'entity'
-  },
+  { id: 'entity-1', title: 'Company Incorporation', description: 'Incorporate under the Companies Act (Cap. 486) or obtain Certificate of Compliance for foreign companies', section: 'Section 3, 9', priority: 'critical', category: 'entity' },
+  { id: 'entity-2', title: 'Registered Office in Kenya', description: 'Establish and maintain a registered office in Kenya', section: 'Section 20', priority: 'critical', category: 'entity' },
+  { id: 'entity-3', title: 'Kenya Bank Account', description: 'Open and maintain a bank account in Kenya', section: 'Section 25(g)', priority: 'high', category: 'entity' },
   // Licensing Requirements
-  {
-    id: 'license-1',
-    title: 'License Application Submitted',
-    description: 'Submit complete license application to relevant regulatory authority (CMA/CBK)',
-    section: 'Section 11',
-    priority: 'critical',
-    category: 'licensing'
-  },
-  {
-    id: 'license-2',
-    title: 'Application Fee Paid',
-    description: 'Pay prescribed non-refundable application fee',
-    section: 'Section 11',
-    priority: 'high',
-    category: 'licensing'
-  },
-  {
-    id: 'license-3',
-    title: 'License Displayed',
-    description: 'Display license at principal place of business once obtained',
-    section: 'Section 13',
-    priority: 'medium',
-    category: 'licensing'
-  },
+  { id: 'license-1', title: 'License Application Submitted', description: 'Submit complete license application to relevant regulatory authority (CMA/CBK)', section: 'Section 11', priority: 'critical', category: 'licensing' },
+  { id: 'license-2', title: 'Application Fee Paid', description: 'Pay prescribed non-refundable application fee', section: 'Section 11', priority: 'high', category: 'licensing' },
+  { id: 'license-3', title: 'License Displayed', description: 'Display license at principal place of business once obtained', section: 'Section 13', priority: 'medium', category: 'licensing' },
   // Governance Requirements
-  {
-    id: 'gov-1',
-    title: 'Board of Directors Appointed',
-    description: 'Appoint at least 2 natural persons as directors',
-    section: 'Section 21',
-    priority: 'critical',
-    category: 'governance'
-  },
-  {
-    id: 'gov-2',
-    title: 'Fit and Proper Assessment',
-    description: 'Ensure all directors and key officers pass fit and proper assessment',
-    section: 'Section 19',
-    priority: 'critical',
-    category: 'governance'
-  },
-  {
-    id: 'gov-3',
-    title: 'CEO Appointment',
-    description: 'Appoint a fit and proper Chief Executive Officer',
-    section: 'Section 19',
-    priority: 'high',
-    category: 'governance'
-  },
-  {
-    id: 'gov-4',
-    title: 'Compliance Officer',
-    description: 'Designate a compliance officer responsible for regulatory matters',
-    section: 'Section 25',
-    priority: 'high',
-    category: 'governance'
-  },
+  { id: 'gov-1', title: 'Board of Directors Appointed', description: 'Appoint at least 2 natural persons as directors', section: 'Section 21', priority: 'critical', category: 'governance' },
+  { id: 'gov-2', title: 'Fit and Proper Assessment', description: 'Ensure all directors and key officers pass fit and proper assessment', section: 'Section 19', priority: 'critical', category: 'governance' },
+  { id: 'gov-3', title: 'CEO Appointment', description: 'Appoint a fit and proper Chief Executive Officer', section: 'Section 19', priority: 'high', category: 'governance' },
+  { id: 'gov-4', title: 'Compliance Officer', description: 'Designate a compliance officer responsible for regulatory matters', section: 'Section 25', priority: 'high', category: 'governance' },
   // AML/CFT/CPF Requirements
-  {
-    id: 'aml-1',
-    title: 'AML/KYC Program Established',
-    description: 'Implement customer due diligence and KYC procedures compliant with POCAMLA',
-    section: 'Section 33',
-    priority: 'critical',
-    category: 'aml'
-  },
-  {
-    id: 'aml-2',
-    title: 'Suspicious Activity Reporting',
-    description: 'Establish procedures for detecting and reporting suspicious transactions to FRC',
-    section: 'Section 33',
-    priority: 'critical',
-    category: 'aml'
-  },
-  {
-    id: 'aml-3',
-    title: 'Sanctions Screening',
-    description: 'Implement screening against targeted financial sanctions lists',
-    section: 'Section 33',
-    priority: 'high',
-    category: 'aml'
-  },
-  {
-    id: 'aml-4',
-    title: 'Risk Assessment Framework',
-    description: 'Conduct and document institutional ML/TF/PF risk assessment',
-    section: 'Section 33',
-    priority: 'high',
-    category: 'aml'
-  },
+  { id: 'aml-1', title: 'AML/KYC Program Established', description: 'Implement customer due diligence and KYC procedures compliant with POCAMLA', section: 'Section 33', priority: 'critical', category: 'aml' },
+  { id: 'aml-2', title: 'Suspicious Activity Reporting', description: 'Establish procedures for detecting and reporting suspicious transactions to FRC', section: 'Section 33', priority: 'critical', category: 'aml' },
+  { id: 'aml-3', title: 'Sanctions Screening', description: 'Implement screening against targeted financial sanctions lists', section: 'Section 33', priority: 'high', category: 'aml' },
+  { id: 'aml-4', title: 'Risk Assessment Framework', description: 'Conduct and document institutional ML/TF/PF risk assessment', section: 'Section 33', priority: 'high', category: 'aml' },
   // Operations Requirements
-  {
-    id: 'ops-1',
-    title: 'Cyber Security Framework',
-    description: 'Implement measures per Computer Misuse and Cybercrimes Act',
-    section: 'Section 29',
-    priority: 'critical',
-    category: 'operations'
-  },
-  {
-    id: 'ops-2',
-    title: 'Customer Asset Protection',
-    description: 'Segregate customer assets and maintain sufficient reserves',
-    section: 'Section 32',
-    priority: 'critical',
-    category: 'operations'
-  },
-  {
-    id: 'ops-3',
-    title: 'Business Continuity Plan',
-    description: 'Develop and test business continuity and disaster recovery plan',
-    section: 'Section 25(i)',
-    priority: 'high',
-    category: 'operations'
-  },
-  {
-    id: 'ops-4',
-    title: 'Data Protection Compliance',
-    description: 'Comply with Data Protection Act requirements',
-    section: 'Section 25(h)',
-    priority: 'high',
-    category: 'operations'
-  },
-  {
-    id: 'ops-5',
-    title: 'Customer Complaint Mechanism',
-    description: 'Establish mechanism to handle and address customer complaints',
-    section: 'Section 25(j)',
-    priority: 'medium',
-    category: 'operations'
-  },
-  {
-    id: 'ops-6',
-    title: 'Professional Insurance',
-    description: 'Obtain professional indemnity insurance covering operational risks',
-    section: 'Section 23',
-    priority: 'high',
-    category: 'operations'
-  },
+  { id: 'ops-1', title: 'Cyber Security Framework', description: 'Implement measures per Computer Misuse and Cybercrimes Act', section: 'Section 29', priority: 'critical', category: 'operations' },
+  { id: 'ops-2', title: 'Customer Asset Protection', description: 'Segregate customer assets and maintain sufficient reserves', section: 'Section 32', priority: 'critical', category: 'operations' },
+  { id: 'ops-3', title: 'Business Continuity Plan', description: 'Develop and test business continuity and disaster recovery plan', section: 'Section 25(i)', priority: 'high', category: 'operations' },
+  { id: 'ops-4', title: 'Data Protection Compliance', description: 'Comply with Data Protection Act requirements', section: 'Section 25(h)', priority: 'high', category: 'operations' },
+  { id: 'ops-5', title: 'Customer Complaint Mechanism', description: 'Establish mechanism to handle and address customer complaints', section: 'Section 25(j)', priority: 'medium', category: 'operations' },
+  { id: 'ops-6', title: 'Professional Insurance', description: 'Obtain professional indemnity insurance covering operational risks', section: 'Section 23', priority: 'high', category: 'operations' },
   // Reporting Requirements
-  {
-    id: 'report-1',
-    title: 'Auditor Appointed',
-    description: 'Engage an approved auditor for annual financial statements',
-    section: 'Section 25(f)',
-    priority: 'high',
-    category: 'reporting'
-  },
-  {
-    id: 'report-2',
-    title: '7-Year Record Keeping',
-    description: 'Establish system to maintain transaction records for 7 years',
-    section: 'Section 44',
-    priority: 'high',
-    category: 'reporting'
-  },
-  {
-    id: 'report-3',
-    title: 'Real-Time Access Capability',
-    description: 'Capability to provide regulators with real-time read-only transaction access',
-    section: 'Section 44',
-    priority: 'medium',
-    category: 'reporting'
-  },
-  {
-    id: 'report-4',
-    title: 'Incident Notification Procedures',
-    description: 'Establish procedures for notifying regulators of material events within 7 working days',
-    section: 'Section 26',
-    priority: 'high',
-    category: 'reporting'
-  }
+  { id: 'report-1', title: 'Auditor Appointed', description: 'Engage an approved auditor for annual financial statements', section: 'Section 25(f)', priority: 'high', category: 'reporting' },
+  { id: 'report-2', title: '7-Year Record Keeping', description: 'Establish system to maintain transaction records for 7 years', section: 'Section 44', priority: 'high', category: 'reporting' },
+  { id: 'report-3', title: 'Real-Time Access Capability', description: 'Capability to provide regulators with real-time read-only transaction access', section: 'Section 44', priority: 'medium', category: 'reporting' },
+  { id: 'report-4', title: 'Incident Notification Procedures', description: 'Establish procedures for notifying regulators of material events within 7 working days', section: 'Section 26', priority: 'high', category: 'reporting' }
 ];
 
 const categoryInfo = {
@@ -237,7 +72,6 @@ export const ComplianceTracker = () => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['entity', 'licensing']));
   const [lastSaved, setLastSaved] = useState<string | null>(null);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -252,7 +86,6 @@ export const ComplianceTracker = () => {
     }
   }, []);
 
-  // Auto-save to localStorage
   useEffect(() => {
     const data = {
       completed: Array.from(completedItems),
@@ -265,18 +98,15 @@ export const ComplianceTracker = () => {
 
   const toggleItem = (id: string) => {
     if (completedItems.has(id)) {
-      // Completed -> Not started
       const newCompleted = new Set(completedItems);
       newCompleted.delete(id);
       setCompletedItems(newCompleted);
     } else if (inProgressItems.has(id)) {
-      // In Progress -> Completed
       const newInProgress = new Set(inProgressItems);
       newInProgress.delete(id);
       setInProgressItems(newInProgress);
       setCompletedItems(new Set([...completedItems, id]));
     } else {
-      // Not started -> In Progress
       setInProgressItems(new Set([...inProgressItems, id]));
     }
   };
@@ -305,9 +135,7 @@ export const ComplianceTracker = () => {
     return 'not-started';
   };
 
-  const getItemsByCategory = (category: string) => {
-    return complianceItems.filter(item => item.category === category);
-  };
+  const getItemsByCategory = (category: string) => complianceItems.filter(item => item.category === category);
 
   const getCategoryProgress = (category: string) => {
     const items = getItemsByCategory(category);
@@ -354,9 +182,27 @@ export const ComplianceTracker = () => {
           <h2 className="font-display text-2xl md:text-4xl font-bold tracking-tight mb-3 md:mb-4">
             Compliance Progress Tracker
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground">
+          <p className="text-sm md:text-lg text-muted-foreground mb-4">
             Track your VASP licensing requirements. Progress auto-saves to your browser.
           </p>
+          
+          {/* Explanation Card */}
+          <Card className="max-w-2xl mx-auto text-left mb-6">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Book className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium mb-1">How to use this tracker:</p>
+                  <ul className="text-muted-foreground space-y-1">
+                    <li>• Click once to mark as "In Progress"</li>
+                    <li>• Click again to mark as "Completed"</li>
+                    <li>• Click a third time to reset to "Not Started"</li>
+                    <li>• Click the info button to see detailed resources and guidance</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
@@ -370,21 +216,16 @@ export const ComplianceTracker = () => {
                     <span className="text-sm text-muted-foreground">{completedItems.size}/{complianceItems.length} items</span>
                   </div>
                   <Progress value={totalProgress} className="h-3" />
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {Math.round(totalProgress)}% complete
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-2">{Math.round(totalProgress)}% complete</p>
                 </div>
                 <div className="flex flex-col justify-center">
                   <div className="flex items-center gap-2 mb-1">
                     <AlertTriangle className="h-4 w-4 text-red-500" />
                     <span className="text-sm font-medium">Critical Items</span>
                   </div>
-                  <p className="text-xl md:text-2xl font-bold text-primary">
-                    {criticalCompleted}/{criticalItems.length}
-                  </p>
+                  <p className="text-xl md:text-2xl font-bold text-primary">{criticalCompleted}/{criticalItems.length}</p>
                 </div>
               </div>
-              
               {lastSaved && (
                 <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1">
                   <Save className="h-3 w-3" />
@@ -422,7 +263,7 @@ export const ComplianceTracker = () => {
             </div>
           </div>
 
-          {/* Category Tabs - Mobile: Vertical, Desktop: Horizontal */}
+          {/* Category Tabs */}
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50 p-1">
               <TabsTrigger value="all" className="text-xs md:text-sm flex-1 min-w-[60px]">All</TabsTrigger>
@@ -441,11 +282,7 @@ export const ComplianceTracker = () => {
                 const categoryProgress = getCategoryProgress(category);
                 
                 return (
-                  <Collapsible
-                    key={category}
-                    open={expandedCategories.has(category)}
-                    onOpenChange={() => toggleCategory(category)}
-                  >
+                  <Collapsible key={category} open={expandedCategories.has(category)} onOpenChange={() => toggleCategory(category)}>
                     <Card>
                       <CollapsibleTrigger className="w-full">
                         <CardHeader className="p-3 md:p-4 cursor-pointer hover:bg-muted/50 transition-colors">
@@ -455,9 +292,7 @@ export const ComplianceTracker = () => {
                               <CardTitle className="text-sm md:text-base font-semibold">{info.label}</CardTitle>
                             </div>
                             <div className="flex items-center gap-2 md:gap-3">
-                              <span className="text-xs md:text-sm text-muted-foreground">
-                                {items.filter(i => completedItems.has(i.id)).length}/{items.length}
-                              </span>
+                              <span className="text-xs md:text-sm text-muted-foreground">{items.filter(i => completedItems.has(i.id)).length}/{items.length}</span>
                               <Progress value={categoryProgress} className="w-16 md:w-24 h-2" />
                             </div>
                           </div>
@@ -517,19 +352,19 @@ const ComplianceItemRow = ({ item, status, onToggle }: ComplianceItemRowProps) =
     medium: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
   };
 
+  const resources = getResourcesForItem(item.id);
+  const hasResources = resources && resources.resources.length > 0;
+
   return (
-    <button
-      onClick={onToggle}
-      className={`w-full text-left p-3 md:p-4 rounded-lg border transition-all touch-manipulation ${
-        status === 'completed' 
-          ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
-          : status === 'in-progress'
-          ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800'
-          : 'bg-background border-border hover:border-primary/50'
-      }`}
-    >
+    <div className={`w-full text-left p-3 md:p-4 rounded-lg border transition-all ${
+      status === 'completed' 
+        ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800' 
+        : status === 'in-progress'
+        ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800'
+        : 'bg-background border-border hover:border-primary/50'
+    }`}>
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex-shrink-0">
+        <button onClick={onToggle} className="mt-0.5 flex-shrink-0 touch-manipulation">
           {status === 'completed' ? (
             <CheckCircle2 className="h-5 w-5 text-green-500" />
           ) : status === 'in-progress' ? (
@@ -537,7 +372,7 @@ const ComplianceItemRow = ({ item, status, onToggle }: ComplianceItemRowProps) =
           ) : (
             <Circle className="h-5 w-5 text-muted-foreground" />
           )}
-        </div>
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <p className={`font-medium text-sm md:text-base ${status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
@@ -548,9 +383,24 @@ const ComplianceItemRow = ({ item, status, onToggle }: ComplianceItemRowProps) =
             </Badge>
           </div>
           <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">{item.description}</p>
-          <p className="text-xs text-primary/70 mt-1">{item.section}</p>
+          <div className="flex items-center gap-2 mt-2">
+            <Link to={resources?.pdfPage ? `/pdf-viewer?page=${resources.pdfPage}` : `/bill/${resources?.billSection || 'part1-preliminary'}`}>
+              <Badge variant="outline" className="text-xs cursor-pointer hover:bg-muted">
+                {item.section}
+                <ExternalLink className="h-2.5 w-2.5 ml-1" />
+              </Badge>
+            </Link>
+            {hasResources && (
+              <Link to={`/compliance/${item.id}`}>
+                <Button variant="ghost" size="sm" className="h-6 px-2 text-xs gap-1">
+                  <Book className="h-3 w-3" />
+                  Resources
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 };

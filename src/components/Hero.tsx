@@ -1,4 +1,5 @@
 import { Shield, FileText, ArrowDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 export const Hero = () => {
@@ -47,21 +48,16 @@ export const Hero = () => {
               Check Your Requirements
               <ArrowDown className="h-4 w-4" />
             </Button>
-            <a 
-              href="/documents/VASP_Bill_2025_Kenya.pdf" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto"
-            >
+            <Link to="/pdf-viewer" className="w-full sm:w-auto">
               <Button 
                 size="lg" 
-                variant="outline" 
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 gap-2 w-full"
+                variant="secondary"
+                className="bg-white/20 text-primary-foreground border-2 border-primary-foreground/30 hover:bg-white/30 gap-2 w-full backdrop-blur-sm"
               >
                 <FileText className="h-4 w-4" />
-                Download Bill PDF
+                View Bill PDF
               </Button>
-            </a>
+            </Link>
           </div>
 
           {/* Stats */}
@@ -71,8 +67,8 @@ export const Hero = () => {
               <div className="text-sm text-primary-foreground/70">Sections</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-primary-foreground">7</div>
-              <div className="text-sm text-primary-foreground/70">VASP Types</div>
+              <div className="text-2xl md:text-3xl font-bold text-primary-foreground">17</div>
+              <div className="text-sm text-primary-foreground/70">Company Types</div>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold text-primary-foreground">6 Mo</div>

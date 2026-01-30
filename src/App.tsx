@@ -11,6 +11,8 @@ import RegulatorDetail from "./pages/RegulatorDetail";
 import LegalPage from "./pages/LegalPage";
 import PDFViewer from "./pages/PDFViewer";
 import Timeline from "./pages/Timeline";
+import CompanyTypePage from "./pages/CompanyTypePage";
+import ComplianceStepPage from "./pages/ComplianceStepPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/legal/:pageId" element={<LegalPage />} />
             <Route path="/pdf-viewer" element={<PDFViewer />} />
             <Route path="/timeline" element={<Timeline />} />
+            <Route path="/company/:companyId" element={<CompanyTypePage />} />
+            <Route path="/compliance/:stepId" element={<ComplianceStepPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
