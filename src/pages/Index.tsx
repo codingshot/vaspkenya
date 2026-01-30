@@ -1,9 +1,12 @@
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { CompanySelector } from '@/components/CompanySelector';
+import { CompanyQuestionnaire } from '@/components/CompanyQuestionnaire';
 import { KeyConcepts } from '@/components/KeyConcepts';
+import { BillIndex } from '@/components/BillIndex';
 import { BillText } from '@/components/BillText';
 import { FAQ } from '@/components/FAQ';
+import { Sources } from '@/components/Sources';
 import { Footer } from '@/components/Footer';
 
 const Index = () => {
@@ -13,9 +16,12 @@ const Index = () => {
       <main className="flex-1">
         <Hero />
         <CompanySelector />
+        <CompanyQuestionnaire />
         <KeyConcepts />
+        <BillIndex />
         <BillText />
         <FAQ />
+        <Sources />
       </main>
       <Footer />
     </div>

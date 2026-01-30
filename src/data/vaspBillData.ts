@@ -710,5 +710,116 @@ export const faqs: FAQ[] = [
     question: 'What happens to customer assets if a VASP faces financial trouble?',
     answer: 'Section 32 protects customers: VASPs must maintain sufficient virtual assets to meet obligations, hold assets for entitled customers, and customer assets cannot be subject to claims from the VASP\'s creditors. This provides segregation protection for customer funds.',
     category: 'Customer Protection'
+  },
+  {
+    id: 'faq-16',
+    question: 'Can a foreign company operate a VASP in Kenya?',
+    answer: 'Yes, but the foreign company must first obtain a Certificate of Compliance from the Registrar of Companies under the Companies Act. This certifies the company is authorized to operate in Kenya. The company must also maintain a registered office in Kenya.',
+    category: 'Licensing'
+  },
+  {
+    id: 'faq-17',
+    question: 'What is an Initial Virtual Asset Offering (IVAO)?',
+    answer: 'An IVAO is a method of raising funds whereby an issuer issues virtual assets and offers them in exchange for funds. This is similar to an ICO (Initial Coin Offering). IVAOs require approval from the regulatory authority before issuance, and natural persons cannot issue or promote them.',
+    category: 'IVAO'
+  },
+  {
+    id: 'faq-18',
+    question: 'What are stablecoins classified as under this Bill?',
+    answer: 'Stablecoins that can be digitally traded or transferred and used for payment or investment purposes would generally fall under the definition of "virtual assets" and be regulated. However, digital representations of fiat currencies issued by the Central Bank of Kenya are excluded.',
+    category: 'Scope'
+  },
+  {
+    id: 'faq-19',
+    question: 'Do I need a license if I only provide services outside Kenya?',
+    answer: 'If you are operating from Kenya (even serving foreign clients) or serving Kenyan clients (even from abroad), you likely need a license. The Act applies to virtual asset services "in or from Kenya." Companies with no Kenya nexus are not covered.',
+    category: 'Scope'
+  },
+  {
+    id: 'faq-20',
+    question: 'What happens if my license application is rejected?',
+    answer: 'The regulatory authority must inform you in writing of the rejection and provide reasons. You have the right to appeal the decision under Section 43. The appeals body can confirm, vary, or revoke the regulatory authority\'s decision.',
+    category: 'Process'
+  },
+  {
+    id: 'faq-21',
+    question: 'How many directors must a VASP company have?',
+    answer: 'A VASP must be managed by a board of directors consisting of at least 2 directors (Section 21). All directors must be natural persons, and a director cannot serve on more than one VASP board.',
+    category: 'Governance'
+  },
+  {
+    id: 'faq-22',
+    question: 'Is DeFi (Decentralized Finance) regulated under this Bill?',
+    answer: 'The Bill focuses on entities conducting virtual asset services. Purely decentralized protocols without identifiable operators may fall outside scope. However, any company or person facilitating DeFi services (like aggregators, front-ends, or liquidity providers) could be regulated.',
+    category: 'Scope'
+  },
+  {
+    id: 'faq-23',
+    question: 'What notifications must a VASP provide to regulators?',
+    answer: 'Section 26 requires notification of: insolvency or potential insolvency, compliance failures, criminal proceedings, registered agent resignations, pending civil suits, cessation of business, director/officer resignations or unfitness, and cyber security incidents. Written reports must follow within 7 working days.',
+    category: 'Compliance'
+  },
+  {
+    id: 'faq-24',
+    question: 'Can I transfer or sell my VASP license to another company?',
+    answer: 'No license can be transferred or assigned without prior written approval from the regulatory authority (Section 15). Unauthorized transfer is an offense subject to enforcement action.',
+    category: 'Licensing'
+  },
+  {
+    id: 'faq-25',
+    question: 'When is this Bill expected to become law?',
+    answer: 'The Bill was published in 2025 and must go through Parliamentary approval process. Timeline depends on legislative priorities. Check the National Treasury and Parliament websites for updates on the Bill\'s progress.',
+    category: 'Transitional'
   }
+];
+
+// Additional export for SEO-friendly bill clauses
+export const billClauses = [
+  { clause: 'Section 1', title: 'Short Title', summary: 'Virtual Asset Service Providers Act, 2025' },
+  { clause: 'Section 2', title: 'Interpretation', summary: 'Definitions of key terms including virtual asset, VASP, IVAO, blockchain' },
+  { clause: 'Section 3', title: 'Meaning of VASP', summary: 'Defines who qualifies as a virtual asset service provider' },
+  { clause: 'Section 4', title: 'Objects of the Act', summary: 'Establish and regulate VASPs, license providers, approve IVAOs' },
+  { clause: 'Section 5', title: 'Scope of Application', summary: 'Defines what is and is not covered by the Act' },
+  { clause: 'Section 6', title: 'Regulatory Authorities', summary: 'CMA, CBK, and other designated bodies' },
+  { clause: 'Section 7', title: 'Functions', summary: 'Powers and duties of regulatory authorities' },
+  { clause: 'Section 8', title: 'Guiding Principles', summary: 'Financial stability, market integrity, innovation, reputation' },
+  { clause: 'Section 9', title: 'Prohibition', summary: 'License requirement, natural persons prohibited' },
+  { clause: 'Section 10', title: 'Permissible Activities', summary: 'Schedule of licensed activities' },
+  { clause: 'Section 11', title: 'License Application', summary: 'Application requirements and process' },
+  { clause: 'Section 12', title: 'Decision Criteria', summary: 'Factors considered in licensing decisions' },
+  { clause: 'Section 13', title: 'License Conditions', summary: 'Conditions and display requirements' },
+  { clause: 'Section 14', title: 'License Duration', summary: 'Valid until December 31st, annual renewal' },
+  { clause: 'Section 15', title: 'Assignment/Transfer', summary: 'No transfer without approval' },
+  { clause: 'Section 16', title: 'Suspension/Revocation', summary: 'Grounds for license suspension or revocation' },
+  { clause: 'Section 17', title: 'Surrender', summary: 'Voluntary surrender process' },
+  { clause: 'Section 18', title: 'Register of Licensees', summary: 'Public register maintained by authorities' },
+  { clause: 'Section 19', title: 'Fit and Proper', summary: 'Assessment criteria for directors and officers' },
+  { clause: 'Section 20', title: 'Registered Office', summary: 'Must maintain office in Kenya' },
+  { clause: 'Section 21', title: 'Prudent Business', summary: 'Board requirements, prudent management' },
+  { clause: 'Section 22', title: 'Business Integrity', summary: 'Due care, skill, fair dealing' },
+  { clause: 'Section 23', title: 'Capital/Solvency', summary: 'Financial soundness requirements' },
+  { clause: 'Section 24', title: 'Conflicts of Interest', summary: 'Policies to manage conflicts' },
+  { clause: 'Section 25', title: 'Additional Requirements', summary: '22 specific ongoing obligations' },
+  { clause: 'Section 26', title: 'Ongoing Notifications', summary: 'Events requiring regulator notification' },
+  { clause: 'Section 27', title: 'Material Changes', summary: 'Approval required for significant changes' },
+  { clause: 'Section 28', title: 'Ownership Changes', summary: 'Share transfers require approval' },
+  { clause: 'Section 29', title: 'Cyber Security', summary: 'Security measures per Cybercrimes Act' },
+  { clause: 'Section 30', title: 'Financial Statements', summary: 'Annual audited statements required' },
+  { clause: 'Section 31', title: 'CEO Appointment', summary: 'CEO requirements and approval' },
+  { clause: 'Section 32', title: 'Customer Protection', summary: 'Asset protection and segregation' },
+  { clause: 'Section 33', title: 'AML/CFT Powers', summary: 'Regulatory powers for AML compliance' },
+  { clause: 'Section 34', title: 'AML Penalties', summary: 'Penalties for AML violations' },
+  { clause: 'Section 35', title: 'IVAO Requirements', summary: 'Initial virtual asset offering rules' },
+  { clause: 'Section 36', title: 'Compliance Inspection', summary: 'Investigation powers' },
+  { clause: 'Section 37', title: 'Examiner Appointment', summary: 'Authority to appoint examiners' },
+  { clause: 'Section 38', title: 'Information Powers', summary: 'Powers to request information' },
+  { clause: 'Section 39', title: 'Additional Powers', summary: 'Extended investigation powers' },
+  { clause: 'Section 40', title: 'Enforcement Action', summary: 'Range of enforcement measures' },
+  { clause: 'Section 41', title: 'Offences/Penalties', summary: 'Criminal penalties and fines' },
+  { clause: 'Section 42', title: 'Confidentiality', summary: 'Information disclosure restrictions' },
+  { clause: 'Section 43', title: 'Appeals', summary: 'Right to appeal decisions' },
+  { clause: 'Section 44', title: 'Transaction Records', summary: '7-year record keeping requirement' },
+  { clause: 'Section 45', title: 'Protection from Liability', summary: 'Regulator immunity for good faith' },
+  { clause: 'Section 46', title: 'Regulations', summary: 'Cabinet Secretary regulation powers' },
+  { clause: 'Section 47', title: 'Transitional Provisions', summary: '6-month transitional period' },
 ];

@@ -2,23 +2,27 @@ import { Shield, ExternalLink, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const Footer = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="border-t bg-card">
-      <div className="container px-4 md:px-8 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container px-4 md:px-8 py-8 md:py-12">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <Shield className="h-5 w-5 text-primary-foreground" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-display text-lg font-bold">Kenya VASP Guide</span>
-              </div>
+              <span className="font-display text-lg font-bold">Kenya VASP Guide</span>
             </div>
-            <p className="text-sm text-muted-foreground max-w-md mb-4">
-              A comprehensive compliance guide for the Virtual Asset Service Providers Bill, 2025. 
-              Navigate Kenya's regulatory framework for virtual assets with clarity.
+            <p className="text-sm text-muted-foreground mb-4">
+              Comprehensive compliance guide for the Virtual Asset Service Providers Bill, 2025.
             </p>
             <a 
               href="/documents/VASP_Bill_2025_Kenya.pdf" 
@@ -27,41 +31,38 @@ export const Footer = () => {
             >
               <Button variant="outline" size="sm" className="gap-2">
                 <FileText className="h-4 w-4" />
-                Download Full Bill PDF
+                Download Bill PDF
               </Button>
             </a>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-semibold mb-4">Navigate</h4>
             <ul className="space-y-2">
-              <li>
-                <a href="#company-selector" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Company Types
-                </a>
-              </li>
-              <li>
-                <a href="#key-concepts" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Key Concepts
-                </a>
-              </li>
-              <li>
-                <a href="#bill-text" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Bill Text
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  FAQ
-                </a>
-              </li>
+              {[
+                { id: 'company-selector', label: 'Company Types' },
+                { id: 'questionnaire', label: 'Assessment' },
+                { id: 'key-concepts', label: 'Key Concepts' },
+                { id: 'bill-text', label: 'Bill Text' },
+                { id: 'faq', label: 'FAQ' },
+                { id: 'sources', label: 'Sources' },
+              ].map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => scrollToSection(item.id)}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Official Resources */}
           <div>
-            <h4 className="font-semibold mb-4">Official Resources</h4>
+            <h4 className="font-semibold mb-4">Regulatory Bodies</h4>
             <ul className="space-y-2">
               <li>
                 <a 
@@ -98,16 +99,27 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <p className="text-sm text-muted-foreground mb-2">
+              This guide is for informational purposes only and does not constitute legal advice.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Consult qualified legal professionals for compliance guidance.
+            </p>
+          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+        <div className="mt-8 pt-6 border-t">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
             <p>
-              © 2025 Kenya VASP Compliance Guide. For informational purposes only.
+              © 2025 Kenya VASP Compliance Guide. Based on draft bill - may change during legislative process.
             </p>
-            <p className="text-center md:text-right">
-              This is not legal advice. Consult qualified legal professionals for compliance guidance.
+            <p>
+              Last updated: January 2025
             </p>
           </div>
         </div>
