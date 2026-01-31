@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ChevronRight, ChevronLeft, CheckCircle2, Building2, 
   Users, Globe, Wallet, BarChart3, AlertTriangle, FileCheck
@@ -24,23 +25,23 @@ const questions: Question[] = [
   {
     id: 'entity-type',
     question: 'What type of entity is your business?',
-    description: 'Only companies can be licensed as VASPs in Kenya',
+    description: 'Section 9(2): Only companies can be licensed as VASPs in Kenya',
     options: [
       { value: 'local-company', label: 'Kenyan Registered Company', description: 'Incorporated under the Companies Act (Cap. 486)' },
-      { value: 'foreign-company', label: 'Foreign Company (with Kenya compliance)', description: 'With Certificate of Compliance in Kenya' },
+      { value: 'foreign-company', label: 'Foreign Company (with Kenya compliance)', description: 'With Certificate of Compliance from Registrar of Companies' },
       { value: 'foreign-no-compliance', label: 'Foreign Company (no Kenya presence)', description: 'Operating globally without Kenya registration' },
-      { value: 'individual', label: 'Individual / Sole Proprietor', description: 'Natural person operating independently' },
-      { value: 'partnership', label: 'Partnership', description: 'Unincorporated partnership' },
-      { value: 'dao', label: 'DAO / Decentralized Entity', description: 'Decentralized autonomous organization' },
+      { value: 'individual', label: 'Individual / Sole Proprietor', description: 'Natural person - NOT eligible under Section 9(2)' },
+      { value: 'partnership', label: 'Partnership', description: 'Unincorporated partnership - NOT eligible' },
+      { value: 'dao', label: 'DAO / Decentralized Entity', description: 'Decentralized autonomous organization - NOT eligible' },
     ]
   },
   {
     id: 'custody-type',
     question: 'Do you hold or control customer virtual assets?',
-    description: 'This determines if you are a custodial service provider',
+    description: 'Custodial services trigger additional requirements under Section 32',
     options: [
       { value: 'custodial', label: 'Yes - Custodial', description: 'We store/manage customer private keys or assets' },
-      { value: 'non-custodial', label: 'No - Non-Custodial', description: 'Users control their own keys; we just provide software' },
+      { value: 'non-custodial', label: 'No - Non-Custodial', description: 'Users control their own keys; we provide software only' },
       { value: 'hybrid', label: 'Hybrid/Mixed', description: 'Some custodial, some non-custodial services' },
       { value: 'unsure', label: 'Not Sure', description: 'Need help determining custody status' },
     ]
@@ -48,7 +49,7 @@ const questions: Question[] = [
   {
     id: 'services',
     question: 'What virtual asset services do you provide?',
-    description: 'Select all that apply',
+    description: 'Select all that apply - see Schedule to the Act',
     multiSelect: true,
     options: [
       { value: 'custody', label: 'Custody / Wallet Services', description: 'Storing virtual assets for clients' },
@@ -58,14 +59,14 @@ const questions: Question[] = [
       { value: 'brokerage', label: 'Brokerage', description: 'Facilitating trades for clients' },
       { value: 'advisory', label: 'Investment Advisory', description: 'Advice on virtual asset investments' },
       { value: 'management', label: 'Asset Management', description: 'Managing virtual asset portfolios' },
-      { value: 'ivao', label: 'Token Issuance (IVAO)', description: 'Issuing/selling new virtual assets' },
+      { value: 'ivao', label: 'Token Issuance (IVAO)', description: 'Issuing/selling new virtual assets - Section 35' },
       { value: 'defi', label: 'DeFi Aggregation', description: 'Frontend for DeFi protocols' },
       { value: 'nft-investment', label: 'NFT (Investment)', description: 'NFTs marketed as investments' },
-      { value: 'nft-art', label: 'NFT (Art/Collectibles)', description: 'Pure art/collectible NFTs' },
-      { value: 'development', label: 'Software/Development Only', description: 'Building dApps, smart contracts, no financial services' },
-      { value: 'education', label: 'Education/Content Only', description: 'Teaching, courses, media about crypto' },
-      { value: 'mining', label: 'Mining Only', description: 'Crypto mining without exchange services' },
-      { value: 'research', label: 'Research/Analytics Only', description: 'Data analytics, research platforms' },
+      { value: 'nft-art', label: 'NFT (Art/Collectibles)', description: 'Pure art/collectible NFTs - EXEMPT per Section 5(2)(d)' },
+      { value: 'development', label: 'Software/Development Only', description: 'Building dApps, smart contracts - may be EXEMPT' },
+      { value: 'education', label: 'Education/Content Only', description: 'Teaching, courses, media - EXEMPT' },
+      { value: 'mining', label: 'Mining Only', description: 'Crypto mining without exchange - may be EXEMPT' },
+      { value: 'research', label: 'Research/Analytics Only', description: 'Data analytics - EXEMPT' },
     ]
   },
   {
@@ -83,32 +84,35 @@ const questions: Question[] = [
   {
     id: 'jurisdiction',
     question: 'Where do you provide services?',
+    description: 'The Act applies to services provided in or from Kenya',
     options: [
       { value: 'kenya-only', label: 'Kenya Only', description: 'Services limited to Kenya' },
       { value: 'kenya-based', label: 'Kenya-Based, Serving Africa', description: 'Based in Kenya, serving regional markets' },
       { value: 'global-kenya', label: 'Global, Serving Kenya', description: 'International company serving Kenyan clients' },
-      { value: 'global-no-kenya', label: 'Global, Not Serving Kenya', description: 'No Kenyan clients or operations' },
+      { value: 'global-no-kenya', label: 'Global, Not Serving Kenya', description: 'No Kenyan clients or operations - NOT subject to Act' },
     ]
   },
   {
     id: 'assets-handled',
     question: 'What types of digital assets do you handle?',
+    description: 'Some asset types are exempt under Section 5',
     multiSelect: true,
     options: [
-      { value: 'crypto', label: 'Cryptocurrencies', description: 'Bitcoin, Ethereum, etc.' },
-      { value: 'stablecoins', label: 'Stablecoins', description: 'USDT, USDC, etc.' },
-      { value: 'utility-tokens', label: 'Utility Tokens (Closed System)', description: 'Non-transferable service access tokens' },
-      { value: 'nfts-investment', label: 'NFTs (Investment)', description: 'NFTs used for investment' },
-      { value: 'nfts-art', label: 'NFTs (Art/Collectibles Only)', description: 'Non-financial NFTs' },
-      { value: 'security-tokens', label: 'Security Tokens', description: 'Tokenized securities' },
+      { value: 'crypto', label: 'Cryptocurrencies', description: 'Bitcoin, Ethereum, etc. - REGULATED' },
+      { value: 'stablecoins', label: 'Stablecoins', description: 'USDT, USDC, etc. - REGULATED' },
+      { value: 'utility-tokens', label: 'Utility Tokens (Closed System)', description: 'Non-transferable service access - EXEMPT per Section 3(2)' },
+      { value: 'nfts-investment', label: 'NFTs (Investment)', description: 'NFTs used for investment - REGULATED' },
+      { value: 'nfts-art', label: 'NFTs (Art/Collectibles Only)', description: 'Non-financial NFTs - EXEMPT per Section 5(2)(d)' },
+      { value: 'security-tokens', label: 'Security Tokens', description: 'Tokenized securities - regulated by CMA' },
       { value: 'none', label: 'No Assets Handled', description: 'Software/education only' },
     ]
   },
   {
     id: 'current-status',
     question: 'What is your current operational status?',
+    description: 'Existing operators have 6 months transitional period (Section 47)',
     options: [
-      { value: 'operating', label: 'Currently Operating', description: 'Already providing services in Kenya' },
+      { value: 'operating', label: 'Currently Operating in Kenya', description: 'Already providing services - apply within 6 months' },
       { value: 'planning', label: 'Planning to Launch', description: 'Preparing to enter Kenyan market' },
       { value: 'expanding', label: 'Expanding to Kenya', description: 'Operating elsewhere, entering Kenya' },
       { value: 'exploring', label: 'Exploring Options', description: 'Researching the market' },
@@ -117,35 +121,73 @@ const questions: Question[] = [
   {
     id: 'compliance-readiness',
     question: 'What compliance measures do you have in place?',
+    description: 'Select all that apply',
     multiSelect: true,
     options: [
-      { value: 'aml-kyc', label: 'AML/KYC Program', description: 'Customer due diligence procedures' },
-      { value: 'cyber-security', label: 'Cyber Security Framework', description: 'Security measures in place' },
-      { value: 'audited-financials', label: 'Audited Financial Statements', description: 'Annual audits completed' },
-      { value: 'local-office', label: 'Kenya Office', description: 'Physical presence in Kenya' },
-      { value: 'local-bank', label: 'Kenya Bank Account', description: 'Banking relationship established' },
-      { value: 'insurance', label: 'Professional Insurance', description: 'Liability coverage' },
+      { value: 'aml-kyc', label: 'AML/KYC Program', description: 'Customer due diligence per POCAMLA' },
+      { value: 'cyber-security', label: 'Cyber Security Framework', description: 'Per Computer Misuse and Cybercrimes Act' },
+      { value: 'audited-financials', label: 'Audited Financial Statements', description: 'Annual audits by approved auditor' },
+      { value: 'local-office', label: 'Kenya Registered Office', description: 'Physical presence per Section 20' },
+      { value: 'local-bank', label: 'Kenya Bank Account', description: 'Per Section 25(g)' },
+      { value: 'insurance', label: 'Professional Insurance', description: 'Liability coverage per Section 23' },
+      { value: 'fit-proper', label: 'Fit & Proper Directors', description: 'Per Section 19 requirements' },
       { value: 'none', label: 'None Yet', description: 'Starting from scratch' },
       { value: 'not-applicable', label: 'Not Applicable', description: 'May not need VASP compliance' },
     ]
   },
 ];
 
+interface ActionItem {
+  action: string;
+  link?: string;
+  linkText?: string;
+  section?: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+interface SectionLink {
+  section: string;
+  title: string;
+  pdfPage: number;
+}
+
 interface AssessmentResult {
   requiresLicense: boolean;
   eligibleForLicense: boolean;
   regulators: string[];
   riskLevel: 'low' | 'medium' | 'high';
-  immediateActions: string[];
-  complianceGaps: string[];
-  relevantSections: string[];
+  immediateActions: ActionItem[];
+  complianceGaps: ActionItem[];
+  relevantSections: SectionLink[];
   estimatedTimeline: string;
+  exemptionReason?: string;
+  entityType: string;
+  services: string[];
 }
 
 export const CompanyQuestionnaire = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
-  const [showResults, setShowResults] = useState(false);
+
+  // Load saved answers from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('vasp-questionnaire-answers');
+    if (saved) {
+      try {
+        setAnswers(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse saved answers');
+      }
+    }
+  }, []);
+
+  // Save answers to localStorage
+  useEffect(() => {
+    if (Object.keys(answers).length > 0) {
+      localStorage.setItem('vasp-questionnaire-answers', JSON.stringify(answers));
+    }
+  }, [answers]);
 
   const progress = ((currentStep + 1) / questions.length) * 100;
   const currentQuestion = questions[currentStep];
@@ -183,7 +225,9 @@ export const CompanyQuestionnaire = () => {
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      setShowResults(true);
+      // Navigate to results page
+      const results = getResults();
+      navigate('/assessment-results', { state: { results } });
     }
   };
 
@@ -203,21 +247,36 @@ export const CompanyQuestionnaire = () => {
     const custodyType = answers['custody-type'] as string;
 
     // Check for exempt activities
-    const isExemptActivity = services.every(s => 
-      ['development', 'education', 'mining', 'nft-art', 'research'].includes(s)
-    ) || assetsHandled.every(a => ['utility-tokens', 'nfts-art', 'none'].includes(a));
+    const exemptServices = ['development', 'education', 'mining', 'nft-art', 'research'];
+    const exemptAssets = ['utility-tokens', 'nfts-art', 'none'];
     
-    const isNonCustodial = custodyType === 'non-custodial';
+    const isExemptActivity = services.length > 0 && services.every(s => exemptServices.includes(s));
+    const isExemptAssets = assetsHandled.length > 0 && assetsHandled.every(a => exemptAssets.includes(a));
+    const isNonCustodial = custodyType === 'non-custodial' && !services.some(s => ['exchange', 'custody', 'payment'].includes(s));
     const isForeignNoCompliance = entityType === 'foreign-no-compliance';
     const isDAO = entityType === 'dao';
+    const isNotServingKenya = jurisdiction === 'global-no-kenya';
+
+    // Determine exemption reason
+    let exemptionReason: string | undefined;
+    if (isNotServingKenya) {
+      exemptionReason = 'Not serving Kenya (Section 4)';
+    } else if (isExemptActivity) {
+      exemptionReason = 'Exempt activity (Section 5)';
+    } else if (isExemptAssets) {
+      exemptionReason = 'Exempt asset types only (Section 3, 5)';
+    } else if (isNonCustodial && services.every(s => exemptServices.includes(s) || s === 'defi')) {
+      exemptionReason = 'Non-custodial software only';
+    }
 
     // Determine if license is required
     const requiresLicense = 
-      jurisdiction !== 'global-no-kenya' && 
+      !isNotServingKenya && 
       !isForeignNoCompliance &&
       services.length > 0 &&
       !isExemptActivity &&
-      !isNonCustodial;
+      !isExemptAssets &&
+      !exemptionReason;
 
     // Determine eligibility
     const eligibleForLicense = 
@@ -229,71 +288,202 @@ export const CompanyQuestionnaire = () => {
       if (services.some(s => ['custody', 'exchange', 'transfer', 'payment'].includes(s))) {
         regulators.push('Central Bank of Kenya (CBK)');
       }
-      if (services.some(s => ['brokerage', 'advisory', 'management', 'ivao', 'exchange'].includes(s))) {
+      if (services.some(s => ['brokerage', 'advisory', 'management', 'ivao', 'exchange', 'defi', 'nft-investment'].includes(s))) {
         regulators.push('Capital Markets Authority (CMA)');
       }
     }
 
     // Risk assessment
     let riskLevel: 'low' | 'medium' | 'high' = 'low';
-    if (currentStatus === 'operating' && !eligibleForLicense) riskLevel = 'high';
-    else if (currentStatus === 'operating' && complianceReady.includes('none')) riskLevel = 'high';
+    if (currentStatus === 'operating' && requiresLicense && !eligibleForLicense) riskLevel = 'high';
+    else if (currentStatus === 'operating' && requiresLicense && complianceReady.includes('none')) riskLevel = 'high';
+    else if (currentStatus === 'operating' && requiresLicense) riskLevel = 'medium';
     else if (services.length > 3) riskLevel = 'medium';
     else if (services.includes('ivao')) riskLevel = 'medium';
 
-    // Immediate actions
-    const immediateActions: string[] = [];
+    // Immediate actions with links
+    const immediateActions: ActionItem[] = [];
+    
     if (!eligibleForLicense && entityType === 'individual') {
-      immediateActions.push('Incorporate a company under the Companies Act - individuals cannot be VASPs');
+      immediateActions.push({
+        action: 'Incorporate a company under the Companies Act - Section 9(2) prohibits individuals from being VASPs',
+        link: '/pdf-viewer?page=6&search=natural%20person',
+        linkText: 'View Section 9(2)',
+        section: 'Section 9',
+        priority: 'high'
+      });
     }
     if (!eligibleForLicense && entityType === 'partnership') {
-      immediateActions.push('Convert to a registered company - partnerships cannot be VASPs');
+      immediateActions.push({
+        action: 'Convert to a registered company - partnerships cannot be licensed as VASPs',
+        link: '/pdf-viewer?page=6&search=company',
+        linkText: 'View Requirements',
+        section: 'Section 9',
+        priority: 'high'
+      });
     }
     if (entityType === 'dao') {
-      immediateActions.push('DAOs cannot be licensed in Kenya - consider incorporating a legal entity wrapper');
+      immediateActions.push({
+        action: 'DAOs cannot be licensed in Kenya - consider incorporating a legal entity wrapper in Kenya',
+        link: '/company/foreign-company',
+        linkText: 'Foreign Company Options',
+        priority: 'high'
+      });
     }
     if (entityType === 'foreign-no-compliance') {
-      immediateActions.push('To serve Kenya, obtain Certificate of Compliance from Registrar of Companies');
-      immediateActions.push('Consider establishing local subsidiary or partnership');
+      immediateActions.push({
+        action: 'To serve Kenyan clients, obtain Certificate of Compliance from the Registrar of Companies',
+        link: 'https://brs.go.ke',
+        linkText: 'Business Registration Service',
+        priority: 'high'
+      });
+      immediateActions.push({
+        action: 'Consider establishing a local subsidiary or partnership with a Kenyan company',
+        link: '/company/foreign-company',
+        linkText: 'Foreign Company Guide',
+        priority: 'medium'
+      });
     }
     if (entityType === 'foreign-company') {
-      immediateActions.push('Verify Certificate of Compliance is current with Registrar of Companies');
+      immediateActions.push({
+        action: 'Verify Certificate of Compliance is current with the Registrar of Companies',
+        link: 'https://brs.go.ke',
+        linkText: 'Check Status',
+        section: 'Section 9',
+        priority: 'medium'
+      });
     }
     if (currentStatus === 'operating' && requiresLicense) {
-      immediateActions.push('Apply for license within 6 months of Act commencement (transitional period)');
+      immediateActions.push({
+        action: 'Apply for license within 6 months of Act commencement (transitional period)',
+        link: '/pdf-viewer?page=26&search=transitional',
+        linkText: 'View Section 47',
+        section: 'Section 47',
+        priority: 'high'
+      });
+    }
+    if (services.includes('ivao')) {
+      immediateActions.push({
+        action: 'IVAO (token issuance) requires prior approval from regulatory authority before any offering',
+        link: '/pdf-viewer?page=18&search=virtual%20asset%20offering',
+        linkText: 'IVAO Requirements',
+        section: 'Section 35',
+        priority: 'high'
+      });
     }
 
-    // Compliance gaps
-    const complianceGaps: string[] = [];
-    if (!complianceReady.includes('aml-kyc')) {
-      complianceGaps.push('Establish AML/KYC/CFT program compliant with POCAMLA');
+    // Compliance gaps with links
+    const complianceGaps: ActionItem[] = [];
+    
+    if (requiresLicense && !complianceReady.includes('aml-kyc')) {
+      complianceGaps.push({
+        action: 'Establish AML/KYC/CFT program compliant with POCAMLA and Prevention of Terrorism Act',
+        link: '/compliance/aml-kyc',
+        linkText: 'AML/KYC Guide',
+        section: 'Section 33',
+        priority: 'high'
+      });
     }
-    if (!complianceReady.includes('cyber-security')) {
-      complianceGaps.push('Implement cyber security measures per Computer Misuse and Cybercrimes Act');
+    if (requiresLicense && !complianceReady.includes('cyber-security')) {
+      complianceGaps.push({
+        action: 'Implement cyber security measures per Computer Misuse and Cybercrimes Act',
+        link: '/compliance/cyber-security',
+        linkText: 'Cyber Security Guide',
+        section: 'Section 29',
+        priority: 'high'
+      });
     }
-    if (!complianceReady.includes('local-office')) {
-      complianceGaps.push('Establish registered office in Kenya (Section 20)');
+    if (requiresLicense && !complianceReady.includes('local-office')) {
+      complianceGaps.push({
+        action: 'Establish registered office in Kenya',
+        link: '/compliance/registered-office',
+        linkText: 'Office Requirements',
+        section: 'Section 20',
+        priority: 'high'
+      });
     }
-    if (!complianceReady.includes('local-bank')) {
-      complianceGaps.push('Open bank account in Kenya (Section 25(g))');
+    if (requiresLicense && !complianceReady.includes('local-bank')) {
+      complianceGaps.push({
+        action: 'Open and maintain a bank account in Kenya',
+        link: '/pdf-viewer?page=13&search=bank%20account',
+        linkText: 'View Requirement',
+        section: 'Section 25(g)',
+        priority: 'medium'
+      });
     }
-    if (!complianceReady.includes('audited-financials')) {
-      complianceGaps.push('Engage approved auditor for annual financial statements');
+    if (requiresLicense && !complianceReady.includes('audited-financials')) {
+      complianceGaps.push({
+        action: 'Engage approved auditor for annual audited financial statements',
+        link: '/compliance/financial-reporting',
+        linkText: 'Audit Requirements',
+        section: 'Section 25(f)',
+        priority: 'medium'
+      });
     }
-    if (!complianceReady.includes('insurance')) {
-      complianceGaps.push('Obtain professional indemnity insurance');
+    if (requiresLicense && !complianceReady.includes('insurance')) {
+      complianceGaps.push({
+        action: 'Obtain professional indemnity insurance as prescribed',
+        link: '/pdf-viewer?page=12&search=insurance',
+        linkText: 'Insurance Requirements',
+        section: 'Section 23',
+        priority: 'medium'
+      });
+    }
+    if (requiresLicense && !complianceReady.includes('fit-proper')) {
+      complianceGaps.push({
+        action: 'Ensure all directors and officers meet fit and proper requirements',
+        link: '/compliance/fit-and-proper',
+        linkText: 'Fit & Proper Guide',
+        section: 'Section 19',
+        priority: 'high'
+      });
+    }
+    if (requiresLicense && services.includes('custody') && !complianceReady.includes('insurance')) {
+      complianceGaps.push({
+        action: 'Implement customer asset protection measures - assets must be segregated',
+        link: '/pdf-viewer?page=16&search=customer%20asset',
+        linkText: 'Customer Protection',
+        section: 'Section 32',
+        priority: 'high'
+      });
     }
 
-    // Relevant sections
-    const relevantSections: string[] = ['Section 3 (VASP Definition)', 'Section 9 (Prohibition)', 'Section 11 (Licensing)'];
-    if (services.includes('ivao')) relevantSections.push('Section 35 (IVAO Requirements)');
-    if (services.includes('custody')) relevantSections.push('Section 32 (Customer Asset Protection)');
-    relevantSections.push('Section 25 (Additional Requirements)', 'Section 33 (AML/CFT/CPF)');
+    // Relevant sections with PDF pages
+    const relevantSections: SectionLink[] = [
+      { section: 'Section 2', title: 'Definitions', pdfPage: 2 },
+      { section: 'Section 3', title: 'VASP Definition', pdfPage: 3 },
+    ];
+    
+    if (!exemptionReason) {
+      relevantSections.push(
+        { section: 'Section 9', title: 'Prohibition (Natural Persons)', pdfPage: 6 },
+        { section: 'Section 11', title: 'License Application', pdfPage: 7 },
+        { section: 'Section 19', title: 'Fit and Proper', pdfPage: 10 },
+        { section: 'Section 25', title: 'Additional Requirements', pdfPage: 13 }
+      );
+    }
+    
+    if (services.includes('ivao')) {
+      relevantSections.push({ section: 'Section 35', title: 'IVAO Requirements', pdfPage: 18 });
+    }
+    if (services.includes('custody')) {
+      relevantSections.push({ section: 'Section 32', title: 'Customer Asset Protection', pdfPage: 16 });
+    }
+    if (requiresLicense) {
+      relevantSections.push(
+        { section: 'Section 33', title: 'AML/CFT/CPF', pdfPage: 17 },
+        { section: 'Section 41', title: 'Penalties', pdfPage: 21 }
+      );
+    }
+    if (currentStatus === 'operating') {
+      relevantSections.push({ section: 'Section 47', title: 'Transitional Provisions', pdfPage: 26 });
+    }
 
     // Timeline
     let estimatedTimeline = '3-6 months';
     if (complianceGaps.length > 4) estimatedTimeline = '6-12 months';
     if (!eligibleForLicense) estimatedTimeline = '12+ months (requires incorporation)';
+    if (!requiresLicense) estimatedTimeline = 'N/A - May be exempt';
 
     return {
       requiresLicense,
@@ -304,163 +494,17 @@ export const CompanyQuestionnaire = () => {
       complianceGaps,
       relevantSections,
       estimatedTimeline,
+      exemptionReason,
+      entityType,
+      services,
     };
   };
 
   const resetQuestionnaire = () => {
     setCurrentStep(0);
     setAnswers({});
-    setShowResults(false);
+    localStorage.removeItem('vasp-questionnaire-answers');
   };
-
-  if (showResults) {
-    const results = getResults();
-    return (
-      <section id="questionnaire" className="py-16 md:py-24 bg-muted/30">
-        <div className="container px-4 md:px-8">
-          <div className="max-w-4xl mx-auto">
-            <Card className="border-2 border-primary/20 shadow-xl">
-              <CardHeader className="text-center border-b bg-primary/5">
-                <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit">
-                  <FileCheck className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="font-display text-2xl md:text-3xl">
-                  Your Compliance Assessment
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Based on your responses, here's your VASP Bill compliance summary
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6 space-y-8">
-                {/* Status Cards */}
-                <div className="grid gap-4 md:grid-cols-3">
-                  <Card className={`${results.requiresLicense ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' : 'border-green-500 bg-green-50 dark:bg-green-950/20'}`}>
-                    <CardContent className="p-4 text-center">
-                      <h4 className="font-semibold mb-1">License Required</h4>
-                      <p className={`text-2xl font-bold ${results.requiresLicense ? 'text-amber-600' : 'text-green-600'}`}>
-                        {results.requiresLicense ? 'Yes' : 'No'}
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card className={`${results.eligibleForLicense ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : 'border-red-500 bg-red-50 dark:bg-red-950/20'}`}>
-                    <CardContent className="p-4 text-center">
-                      <h4 className="font-semibold mb-1">Currently Eligible</h4>
-                      <p className={`text-2xl font-bold ${results.eligibleForLicense ? 'text-green-600' : 'text-red-600'}`}>
-                        {results.eligibleForLicense ? 'Yes' : 'No'}
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card className={`${
-                    results.riskLevel === 'low' ? 'border-green-500 bg-green-50 dark:bg-green-950/20' :
-                    results.riskLevel === 'medium' ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' :
-                    'border-red-500 bg-red-50 dark:bg-red-950/20'
-                  }`}>
-                    <CardContent className="p-4 text-center">
-                      <h4 className="font-semibold mb-1">Risk Level</h4>
-                      <p className={`text-2xl font-bold capitalize ${
-                        results.riskLevel === 'low' ? 'text-green-600' :
-                        results.riskLevel === 'medium' ? 'text-amber-600' :
-                        'text-red-600'
-                      }`}>
-                        {results.riskLevel}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Regulators */}
-                {results.regulators.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold flex items-center gap-2 mb-3">
-                      <Building2 className="h-5 w-5 text-primary" />
-                      Your Regulatory Authorities
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {results.regulators.map((reg) => (
-                        <Badge key={reg} variant="secondary" className="text-sm py-1.5 px-3">
-                          {reg}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Immediate Actions */}
-                {results.immediateActions.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold flex items-center gap-2 mb-3 text-red-600">
-                      <AlertTriangle className="h-5 w-5" />
-                      Immediate Actions Required
-                    </h4>
-                    <ul className="space-y-2">
-                      {results.immediateActions.map((action, i) => (
-                        <li key={i} className="flex items-start gap-3 bg-red-50 dark:bg-red-950/20 p-3 rounded-lg">
-                          <span className="font-bold text-red-600">{i + 1}.</span>
-                          <span className="text-sm">{action}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Compliance Gaps */}
-                {results.complianceGaps.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold flex items-center gap-2 mb-3">
-                      <CheckCircle2 className="h-5 w-5 text-primary" />
-                      Compliance Gaps to Address
-                    </h4>
-                    <ul className="grid gap-2 md:grid-cols-2">
-                      {results.complianceGaps.map((gap, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
-                          <div className="mt-1.5 h-2 w-2 rounded-full bg-amber-500 flex-shrink-0" />
-                          <span className="text-muted-foreground">{gap}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Relevant Sections */}
-                <div>
-                  <h4 className="font-semibold mb-3">Key Bill Sections for Your Business</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {results.relevantSections.map((section) => (
-                      <Badge key={section} variant="outline" className="text-xs">
-                        {section}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Timeline */}
-                <div className="bg-muted p-4 rounded-lg">
-                  <h4 className="font-semibold mb-1">Estimated Compliance Timeline</h4>
-                  <p className="text-2xl font-bold text-primary">{results.estimatedTimeline}</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    This is an estimate based on typical cases. Actual timeline may vary.
-                  </p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t">
-                  <Button onClick={resetQuestionnaire} variant="outline" className="flex-1">
-                    Start Over
-                  </Button>
-                  <Button 
-                    onClick={() => document.getElementById('bill-text')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex-1"
-                  >
-                    View Relevant Bill Sections
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="questionnaire" className="py-16 md:py-24 bg-muted/30">
@@ -473,7 +517,7 @@ export const CompanyQuestionnaire = () => {
             Determine Your Requirements
           </h2>
           <p className="text-lg text-muted-foreground">
-            Answer a few questions to get a personalized compliance assessment.
+            Answer a few questions to get a personalized compliance assessment based on the VASP Act, 2025.
           </p>
         </div>
 
@@ -548,6 +592,15 @@ export const CompanyQuestionnaire = () => {
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
+              
+              {/* Reset button */}
+              {Object.keys(answers).length > 0 && (
+                <div className="pt-2 text-center">
+                  <Button variant="ghost" size="sm" onClick={resetQuestionnaire} className="text-muted-foreground">
+                    Start Over
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
