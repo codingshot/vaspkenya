@@ -27,9 +27,11 @@ const questions: Question[] = [
     description: 'Only companies can be licensed as VASPs in Kenya',
     options: [
       { value: 'local-company', label: 'Kenyan Registered Company', description: 'Incorporated under the Companies Act (Cap. 486)' },
-      { value: 'foreign-company', label: 'Foreign Company', description: 'With Certificate of Compliance in Kenya' },
+      { value: 'foreign-company', label: 'Foreign Company (with Kenya compliance)', description: 'With Certificate of Compliance in Kenya' },
+      { value: 'foreign-no-compliance', label: 'Foreign Company (no Kenya presence)', description: 'Operating globally without Kenya registration' },
       { value: 'individual', label: 'Individual / Sole Proprietor', description: 'Natural person operating independently' },
       { value: 'partnership', label: 'Partnership', description: 'Unincorporated partnership' },
+      { value: 'dao', label: 'DAO / Decentralized Entity', description: 'Decentralized autonomous organization' },
     ]
   },
   {
@@ -57,9 +59,13 @@ const questions: Question[] = [
       { value: 'advisory', label: 'Investment Advisory', description: 'Advice on virtual asset investments' },
       { value: 'management', label: 'Asset Management', description: 'Managing virtual asset portfolios' },
       { value: 'ivao', label: 'Token Issuance (IVAO)', description: 'Issuing/selling new virtual assets' },
+      { value: 'defi', label: 'DeFi Aggregation', description: 'Frontend for DeFi protocols' },
+      { value: 'nft-investment', label: 'NFT (Investment)', description: 'NFTs marketed as investments' },
+      { value: 'nft-art', label: 'NFT (Art/Collectibles)', description: 'Pure art/collectible NFTs' },
       { value: 'development', label: 'Software/Development Only', description: 'Building dApps, smart contracts, no financial services' },
       { value: 'education', label: 'Education/Content Only', description: 'Teaching, courses, media about crypto' },
       { value: 'mining', label: 'Mining Only', description: 'Crypto mining without exchange services' },
+      { value: 'research', label: 'Research/Analytics Only', description: 'Data analytics, research platforms' },
     ]
   },
   {
@@ -198,14 +204,17 @@ export const CompanyQuestionnaire = () => {
 
     // Check for exempt activities
     const isExemptActivity = services.every(s => 
-      ['development', 'education', 'mining', 'nfts-art'].includes(s)
+      ['development', 'education', 'mining', 'nft-art', 'research'].includes(s)
     ) || assetsHandled.every(a => ['utility-tokens', 'nfts-art', 'none'].includes(a));
     
     const isNonCustodial = custodyType === 'non-custodial';
+    const isForeignNoCompliance = entityType === 'foreign-no-compliance';
+    const isDAO = entityType === 'dao';
 
     // Determine if license is required
     const requiresLicense = 
       jurisdiction !== 'global-no-kenya' && 
+      !isForeignNoCompliance &&
       services.length > 0 &&
       !isExemptActivity &&
       !isNonCustodial;
@@ -240,10 +249,17 @@ export const CompanyQuestionnaire = () => {
     if (!eligibleForLicense && entityType === 'partnership') {
       immediateActions.push('Convert to a registered company - partnerships cannot be VASPs');
     }
-    if (entityType === 'foreign-company') {
-      immediateActions.push('Obtain Certificate of Compliance from Registrar of Companies');
+    if (entityType === 'dao') {
+      immediateActions.push('DAOs cannot be licensed in Kenya - consider incorporating a legal entity wrapper');
     }
-    if (currentStatus === 'operating') {
+    if (entityType === 'foreign-no-compliance') {
+      immediateActions.push('To serve Kenya, obtain Certificate of Compliance from Registrar of Companies');
+      immediateActions.push('Consider establishing local subsidiary or partnership');
+    }
+    if (entityType === 'foreign-company') {
+      immediateActions.push('Verify Certificate of Compliance is current with Registrar of Companies');
+    }
+    if (currentStatus === 'operating' && requiresLicense) {
       immediateActions.push('Apply for license within 6 months of Act commencement (transitional period)');
     }
 

@@ -205,63 +205,60 @@ export const ComplianceTracker = () => {
           </Card>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
-          {/* Overall Progress Card */}
+        <div className="max-w-4xl mx-auto space-y-4">
+          {/* Overall Progress Card - Compact */}
           <Card className="border-2 border-primary/20">
-            <CardContent className="p-4 md:p-6">
-              <div className="grid gap-4 md:gap-6 md:grid-cols-3">
-                <div className="md:col-span-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Overall Progress</span>
-                    <span className="text-sm text-muted-foreground">{completedItems.size}/{complianceItems.length} items</span>
+            <CardContent className="p-4">
+              <div className="flex flex-wrap items-center gap-4">
+                {/* Progress */}
+                <div className="flex-1 min-w-[200px]">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium">Progress</span>
+                    <span className="text-sm text-muted-foreground">{completedItems.size}/{complianceItems.length}</span>
                   </div>
-                  <Progress value={totalProgress} className="h-3" />
-                  <p className="text-xs text-muted-foreground mt-2">{Math.round(totalProgress)}% complete</p>
+                  <Progress value={totalProgress} className="h-2" />
                 </div>
-                <div className="flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-1">
-                    <AlertTriangle className="h-4 w-4 text-red-500" />
-                    <span className="text-sm font-medium">Critical Items</span>
-                  </div>
-                  <p className="text-xl md:text-2xl font-bold text-primary">{criticalCompleted}/{criticalItems.length}</p>
+                
+                {/* Critical */}
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                  <span className="text-sm">Critical: <span className="font-bold">{criticalCompleted}/{criticalItems.length}</span></span>
+                </div>
+                
+                {/* Status & Actions - inline */}
+                <div className="flex items-center gap-2 ml-auto">
+                  {lastSaved && (
+                    <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">
+                      <Save className="h-3 w-3" />
+                      Saved
+                    </span>
+                  )}
+                  <Button variant="ghost" size="icon" onClick={exportProgress} title="Export Progress">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={resetProgress} title="Reset All" className="text-destructive hover:text-destructive">
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-              {lastSaved && (
-                <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1">
-                  <Save className="h-3 w-3" />
-                  Auto-saved: {new Date(lastSaved).toLocaleString()}
-                </p>
-              )}
+              
+              {/* Legend - inline */}
+              <div className="flex flex-wrap gap-4 mt-3 pt-3 border-t text-xs">
+                <div className="flex items-center gap-1">
+                  <Circle className="h-3 w-3 text-muted-foreground" />
+                  <span>Not Started</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3 text-amber-500" />
+                  <span>In Progress</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3 text-green-500" />
+                  <span>Completed</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
-
-          {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2 md:gap-3">
-            <Button variant="outline" size="sm" onClick={exportProgress} className="gap-1.5 text-xs md:text-sm">
-              <Download className="h-3.5 w-3.5" />
-              Export Progress
-            </Button>
-            <Button variant="outline" size="sm" onClick={resetProgress} className="gap-1.5 text-xs md:text-sm text-destructive hover:text-destructive">
-              <RotateCcw className="h-3.5 w-3.5" />
-              Reset All
-            </Button>
-          </div>
-
-          {/* Legend */}
-          <div className="flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm">
-            <div className="flex items-center gap-1.5">
-              <Circle className="h-4 w-4 text-muted-foreground" />
-              <span>Not Started</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-amber-500" />
-              <span>In Progress</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span>Completed</span>
-            </div>
-          </div>
 
           {/* Category Tabs */}
           <Tabs defaultValue="all" className="w-full">
