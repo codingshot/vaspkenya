@@ -12,6 +12,28 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 
+// Map bill sections to actual PDF pages (44-page document)
+const getPdfPageForSection = (sectionId: string): number => {
+  const pageMap: Record<string, number> = {
+    'part1-preliminary': 2,      // Pages 2-5: Sections 1-5
+    'part2-authorities': 4,       // Pages 4-5: Sections 6-8
+    'part3-licensing': 6,         // Pages 6-9: Sections 9-18
+    'part4-obligations': 10,      // Pages 10-17: Sections 19-32
+    'part5-aml': 17,              // Pages 17-18: Sections 33-34
+    'part6-ivao': 18,             // Page 18: Section 35
+    'part7-investigation': 19,    // Pages 19-20: Sections 36-39
+    'part8-enforcement': 21,      // Pages 21-22: Sections 40-41
+    'part9-miscellaneous': 23,    // Pages 23-26: Sections 42-47
+  };
+  
+  for (const [key, page] of Object.entries(pageMap)) {
+    if (sectionId.includes(key.replace('part', ''))) {
+      return page;
+    }
+  }
+  return pageMap[sectionId] || 2;
+};
+
 export const BillText = () => {
   const [search, setSearch] = useState('');
   const [openSections, setOpenSections] = useState<string[]>(['part1-preliminary']);
@@ -156,7 +178,7 @@ export const BillText = () => {
                         ))}
                       </div>
                       <div className="flex gap-2">
-                        <Link to={`/pdf-viewer?page=${section.id.includes('part1') ? 2 : section.id.includes('part2') ? 4 : section.id.includes('part3') ? 6 : section.id.includes('part4') ? 10 : section.id.includes('part5') ? 17 : section.id.includes('part6') ? 17 : section.id.includes('part7') ? 19 : 21}&search=${encodeURIComponent(section.title.split(' ').slice(0, 3).join(' '))}`}>
+                        <Link to={`/pdf-viewer?page=${getPdfPageForSection(section.id)}&search=${encodeURIComponent(section.title.split(' ').slice(0, 3).join(' '))}`}>
                           <Button variant="default" size="sm" className="gap-2 text-xs md:text-sm">
                             View in PDF
                             <FileText className="h-3 w-3" />

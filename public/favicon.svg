@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <!-- Background - Kenya flag colors -->
+  <rect x="0" y="0" width="40" height="12" fill="#000000"/>
+  <rect x="0" y="12" width="40" height="2" fill="#FFFFFF"/>
+  <rect x="0" y="14" width="40" height="12" fill="#BB0000"/>
+  <rect x="0" y="26" width="40" height="2" fill="#FFFFFF"/>
+  <rect x="0" y="28" width="40" height="12" fill="#006600"/>
+  
+  <!-- Book shape -->
+  <rect x="16" y="4" width="8" height="32" fill="rgba(255,255,255,0.3)" rx="1"/>
+  <path d="M6 6 L16 4 L16 36 L6 34 Z" fill="rgba(255,255,255,0.95)" stroke="rgba(0,0,0,0.2)" stroke-width="0.5"/>
+  <path d="M34 6 L24 4 L24 36 L34 34 Z" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.2)" stroke-width="0.5"/>
+  
+  <!-- Page lines -->
+  <line x1="8" y1="10" x2="14" y2="9" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  <line x1="8" y1="13" x2="14" y2="12" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  <line x1="8" y1="16" x2="14" y2="15" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  <line x1="26" y1="9" x2="32" y2="10" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  <line x1="26" y1="12" x2="32" y2="13" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  <line x1="26" y1="15" x2="32" y2="16" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+  
+  <!-- Bitcoin symbol -->
+  <circle cx="20" cy="26" r="8" fill="#F7931A"/>
+  <text x="20" y="30" text-anchor="middle" font-size="11" font-weight="bold" fill="white" font-family="Arial, sans-serif">₿</text>
+  
+  <!-- Gold gavel dot -->
+  <circle cx="20" cy="5" r="2.5" fill="#FFD700"/>
+</svg>

@@ -1,15 +1,33 @@
 import { ExternalLink, FileText, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 export const Sources = () => {
   const primarySources = [
     {
-      name: 'Virtual Asset Service Providers Bill, 2025',
-      organization: 'Kenya National Treasury',
-      url: 'https://newsite.treasury.go.ke/sites/default/files/Notices/VIRTUAL-ASSET-SERVICE-PROVIDERS-BILL-2024.pdf',
-      type: 'Primary Source',
+      name: 'Virtual Asset Service Providers Act, 2025',
+      organization: 'Parliament of Kenya',
+      url: 'https://parliament.go.ke',
+      type: 'Primary Law',
       verified: true,
+      description: 'Official enacted law - 44 pages, 47 sections'
+    },
+    {
+      name: 'CBK/CMA Implementation Notice',
+      organization: 'Central Bank of Kenya',
+      url: 'https://centralbank.go.ke',
+      type: 'Official Notice',
+      verified: true,
+      description: 'Joint implementation and licensing notice'
+    },
+    {
+      name: 'Draft National Policy on Virtual Assets',
+      organization: 'Kenya National Treasury',
+      url: 'https://newsite.treasury.go.ke',
+      type: 'Policy Background',
+      verified: true,
+      description: 'Background policy document'
     },
   ];
 
@@ -28,22 +46,46 @@ export const Sources = () => {
     },
     {
       name: 'National Treasury',
-      role: 'Bill sponsor and policy coordination',
+      role: 'Policy coordination and legislative sponsor',
       url: 'https://www.treasury.go.ke',
       contact: 'https://www.treasury.go.ke/contact/',
     },
   ];
 
+  const legalAnalysis = [
+    {
+      name: 'Bowmans Law',
+      description: 'Updated Bill 2025 analysis',
+      url: 'https://bowmanslaw.com',
+      type: 'Legal Analysis'
+    },
+    {
+      name: 'Njaga Advocates',
+      description: 'VASP Bill 2025 explainer',
+      url: 'https://njagaadvocates.com',
+      type: 'Legal Analysis'
+    },
+    {
+      name: 'Mohammed Muigai Advocates',
+      description: 'VASP Bill briefing',
+      url: 'https://mohammedmuigai.com',
+      type: 'Legal Analysis'
+    },
+  ];
+
   const relatedLegislation = [
     { name: 'Companies Act', chapter: 'Cap. 486', relevance: 'Company registration requirements for VASPs' },
-    { name: 'Capital Markets Act', chapter: 'Cap. 485A', relevance: 'CMA establishment and powers' },
-    { name: 'Proceeds of Crime and Anti-Money Laundering Act', chapter: 'Cap. 59A', relevance: 'AML/CFT framework and Financial Reporting Centre' },
+    { name: 'Capital Markets Act', chapter: 'Cap. 485A', relevance: 'CMA establishment and powers (amended by VASP Act)' },
+    { name: 'Central Bank of Kenya Act', chapter: 'Cap. 491', relevance: 'CBK supervisory powers (amended by VASP Act)' },
+    { name: 'Proceeds of Crime and Anti-Money Laundering Act', chapter: 'Cap. 59A', relevance: 'AML/CFT framework - VASPs now classified as reporting institutions' },
     { name: 'Prevention of Terrorism Act', chapter: '-', relevance: 'Counter-terrorism financing requirements' },
     { name: 'Computer Misuse and Cybercrimes Act', chapter: 'Cap. 79C', relevance: 'Cyber security standards for VASPs' },
-    { name: 'National Payment Systems Regulations, 2014', chapter: 'L.N. No. 109 of 2014', relevance: 'E-money definition' },
+    { name: 'Data Protection Act', chapter: 'Cap. 411C', relevance: 'Customer data handling requirements' },
   ];
 
   const factChecks = [
+    { fact: 'Act enacted 15 October 2025 (Presidential assent)', section: 'Gazette Notice', status: 'verified' },
+    { fact: '44-page official bill text', section: 'Parliament Record', status: 'verified' },
     { fact: 'Natural persons cannot operate as VASPs', section: 'Section 9(2)', status: 'verified' },
     { fact: 'VASP licenses expire December 31st annually', section: 'Section 14', status: 'verified' },
     { fact: 'Transaction records must be kept for 7 years', section: 'Section 44(2)', status: 'verified' },
@@ -66,25 +108,33 @@ export const Sources = () => {
             Official Sources & Fact Checking
           </h2>
           <p className="text-lg text-muted-foreground">
-            All information is sourced from official government publications and verified against the bill text.
+            All information is sourced from official government publications and verified against the enacted law.
           </p>
         </div>
 
         <div className="max-w-5xl mx-auto space-y-8">
-          {/* Primary Source */}
+          {/* Primary Sources */}
           <Card className="border-2 border-primary/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Primary Source Document
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  Primary Official Sources
+                </CardTitle>
+                <Link to="/timeline">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-muted">
+                    View Timeline →
+                  </Badge>
+                </Link>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-3">
               {primarySources.map((source) => (
                 <div key={source.name} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg">
                   <div>
                     <h4 className="font-semibold">{source.name}</h4>
                     <p className="text-sm text-muted-foreground">{source.organization}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{source.description}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <Badge variant="outline">{source.type}</Badge>
                       {source.verified && (
@@ -99,9 +149,9 @@ export const Sources = () => {
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium whitespace-nowrap"
                   >
-                    View Document
+                    View Source
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 </div>
@@ -144,10 +194,42 @@ export const Sources = () => {
             </CardContent>
           </Card>
 
+          {/* Legal Analysis (Secondary Sources) */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Legal Analysis (Secondary Sources)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                These are interpretive analyses from law firms - not official sources. For legal compliance, always reference official documents.
+              </p>
+              <div className="grid gap-3 md:grid-cols-3">
+                {legalAnalysis.map((source) => (
+                  <a
+                    key={source.name}
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h4 className="font-medium text-sm">{source.name}</h4>
+                        <p className="text-xs text-muted-foreground">{source.description}</p>
+                        <Badge variant="outline" className="mt-2 text-[10px]">{source.type}</Badge>
+                      </div>
+                      <ExternalLink className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Related Legislation */}
           <Card>
             <CardHeader>
-              <CardTitle>Related Legislation Referenced in Bill</CardTitle>
+              <CardTitle>Related Legislation Referenced in Act</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -156,7 +238,7 @@ export const Sources = () => {
                     <tr className="border-b">
                       <th className="text-left py-3 px-4 font-semibold">Legislation</th>
                       <th className="text-left py-3 px-4 font-semibold">Chapter</th>
-                      <th className="text-left py-3 px-4 font-semibold">Relevance to VASP Bill</th>
+                      <th className="text-left py-3 px-4 font-semibold">Relevance to VASP Act</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -207,7 +289,7 @@ export const Sources = () => {
                   </h4>
                   <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
                     This application is for <strong>informational purposes only</strong> and does not constitute legal advice. 
-                    The content is based on the draft Virtual Asset Service Providers Bill, 2025 which may change during the legislative process.
+                    The content is based on the Virtual Asset Service Providers Act, 2025 as enacted. Regulations and guidelines may be issued by CMA and CBK.
                   </p>
                   <p className="text-sm text-amber-700 dark:text-amber-300">
                     For official guidance and legal advice, please consult:
