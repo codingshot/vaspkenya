@@ -1,8 +1,10 @@
-import { FileText, Shield, Menu, X, Calendar } from 'lucide-react';
+import { FileText, Menu, X, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { UserProfile } from '@/components/UserProfile';
+import { Logo } from '@/components/Logo';
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,9 +38,7 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 md:h-16 items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary">
-            <Shield className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
-          </div>
+          <Logo size="md" />
           <div className="flex flex-col">
             <span className="font-display text-sm md:text-lg font-bold leading-tight">Kenya VASP</span>
             <span className="text-[9px] md:text-xs text-muted-foreground hidden sm:block">Compliance Guide</span>
@@ -56,7 +56,7 @@ export const Header = () => {
               {item.label}
             </button>
           ))}
-          <div className="flex items-center gap-2 ml-2">
+          <div className="flex items-center gap-1 ml-2">
             <Link to="/timeline">
               <Button variant="outline" size="sm" className="gap-1 text-xs">
                 <Calendar className="h-3 w-3" />
@@ -70,12 +70,14 @@ export const Header = () => {
               </Button>
             </Link>
             <LanguageToggle />
+            <UserProfile />
           </div>
         </nav>
 
         {/* Mobile Menu Button */}
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-1">
           <LanguageToggle />
+          <UserProfile />
           <button
             className="p-2 -mr-2 touch-manipulation"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

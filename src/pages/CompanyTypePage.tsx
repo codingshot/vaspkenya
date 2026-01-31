@@ -10,7 +10,7 @@ import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getCompanyById, type CompanyTypeData } from '@/data/companyTypesData';
+import { getCompanyById, getRelatedCompanies, type CompanyTypeData } from '@/data/companyTypesData';
 
 const iconMap: Record<string, React.ReactNode> = {
   'Wallet': <Wallet className="h-6 w-6" />,
@@ -270,6 +270,33 @@ const CompanyTypePage = () => {
             </div>
           </section>
         )}
+
+        {/* Related Company Types */}
+        <section className="py-10 md:py-16 bg-muted/30">
+          <div className="container px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="font-display text-lg md:text-xl font-bold mb-6">Related Business Types</h2>
+              <div className="grid gap-4 md:grid-cols-3">
+                {getRelatedCompanies(company.id, 3).map((related) => (
+                  <Link key={related.id} to={`/company/${related.id}`}>
+                    <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
+                      <CardContent className="p-4">
+                        <div className={`inline-flex p-2 rounded-lg mb-2 ${related.isRegulated ? 'bg-primary/10' : 'bg-green-100 dark:bg-green-900/20'}`}>
+                          {iconMap[related.icon] || <Building2 className="h-5 w-5" />}
+                        </div>
+                        <h3 className="font-semibold text-sm mb-1 line-clamp-2">{related.name}</h3>
+                        <Badge variant="outline" className={`text-[10px] ${related.isRegulated ? 'border-destructive/50 text-destructive' : 'border-green-500 text-green-600'}`}>
+                          {related.isRegulated ? 'Regulated' : 'Exempt'}
+                        </Badge>
+                        <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{related.description}</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* CTA */}
         <section className="py-10 md:py-16 border-t">

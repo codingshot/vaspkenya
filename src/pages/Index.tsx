@@ -3,6 +3,7 @@ import { Hero } from '@/components/Hero';
 import { CompanySelector } from '@/components/CompanySelector';
 import { CompanyQuestionnaire } from '@/components/CompanyQuestionnaire';
 import { ComplianceTracker } from '@/components/ComplianceTracker';
+import { PenaltyCalculator } from '@/components/PenaltyCalculator';
 import { RegulatorComparison } from '@/components/RegulatorComparison';
 import { KeyConcepts } from '@/components/KeyConcepts';
 import { BillIndex } from '@/components/BillIndex';
@@ -21,6 +22,7 @@ const Index = () => {
         <CompanySelector />
         <CompanyQuestionnaire />
         <ComplianceTracker />
+        <PenaltyCalculator />
         <RegulatorComparison />
         <KeyConcepts />
         <BillIndex />

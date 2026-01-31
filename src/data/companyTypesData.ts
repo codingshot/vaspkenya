@@ -630,3 +630,45 @@ export const searchCompanyTypes = (query: string): CompanyTypeData[] => {
 // Get company by ID
 export const getCompanyById = (id: string): CompanyTypeData | undefined => 
   companyTypesData.find(c => c.id === id);
+
+// Get related company types based on similarity
+export const getRelatedCompanies = (companyId: string, limit: number = 3): CompanyTypeData[] => {
+  const company = getCompanyById(companyId);
+  if (!company) return [];
+  
+  return companyTypesData
+    .filter(c => c.id !== companyId)
+    .map(c => {
+      let score = 0;
+      
+      // Same regulation status = high similarity
+      if (c.isRegulated === company.isRegulated) score += 30;
+      if (c.regulationStatus === company.regulationStatus) score += 20;
+      
+      // Same regulatory authority
+      c.regulatoryAuthority.forEach(auth => {
+        if (company.regulatoryAuthority.includes(auth)) score += 15;
+      });
+      
+      // Same custodial type
+      if (c.custodial === company.custodial) score += 10;
+      
+      // Same risk level
+      if (c.riskLevel === company.riskLevel) score += 10;
+      
+      // Keyword overlap
+      c.keywords.forEach(kw => {
+        if (company.keywords.includes(kw)) score += 5;
+      });
+      
+      // Section overlap
+      c.relevantSections.forEach(sec => {
+        if (company.relevantSections.includes(sec)) score += 3;
+      });
+      
+      return { company: c, score };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(r => r.company);
+};
