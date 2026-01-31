@@ -13,6 +13,7 @@ import PDFViewer from "./pages/PDFViewer";
 import Timeline from "./pages/Timeline";
 import CompanyTypePage from "./pages/CompanyTypePage";
 import ComplianceStepPage from "./pages/ComplianceStepPage";
+import AssessmentResultsPage from "./pages/AssessmentResultsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/company/:companyId" element={<CompanyTypePage />} />
             <Route path="/compliance/:stepId" element={<ComplianceStepPage />} />
+            <Route path="/assessment-results" element={<AssessmentResultsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
