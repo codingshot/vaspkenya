@@ -22,7 +22,7 @@ export const Footer = () => {
               <span className="font-display text-lg font-bold">Kenya VASP Guide</span>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
-              Comprehensive compliance guide for the Virtual Asset Service Providers Bill, 2025.
+              Comprehensive compliance guide for the Virtual Asset Service Providers Act, 2025.
             </p>
             <a 
               href="/documents/VASP_Bill_2025_Kenya.pdf" 
@@ -116,10 +116,10 @@ export const Footer = () => {
         <div className="mt-8 pt-6 border-t">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
             <p>
-              © 2025 Kenya VASP Compliance Guide. Based on draft bill - may change during legislative process.
+              © 2025 Kenya VASP Compliance Guide. Based on the Virtual Asset Service Providers Act, 2025 (enacted 15 October 2025).
             </p>
             <p>
-              Last updated: January 2025
+              Last updated: January 2026
             </p>
           </div>
         </div>
