@@ -1,5 +1,8 @@
-import { Shield, ExternalLink, FileText } from 'lucide-react';
+import { Shield, ExternalLink, FileText, Github, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+const GITHUB_URL = 'https://github.com/codingshot/vaspkenya';
+const CONTACT_EMAIL = 'info@vaspkenya.com';
 
 export const Footer = () => {
   const scrollToSection = (id: string) => {
@@ -100,15 +103,31 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Legal & Contact */}
           <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <p className="text-sm text-muted-foreground mb-2">
+            <h4 className="font-semibold mb-4">Legal & Contact</h4>
+            <p className="text-sm text-muted-foreground mb-3">
               This guide is for informational purposes only and does not constitute legal advice.
             </p>
-            <p className="text-sm text-muted-foreground">
-              Consult qualified legal professionals for compliance guidance.
-            </p>
+            <div className="space-y-2">
+              <a 
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
+              >
+                <Mail className="h-4 w-4" />
+                Contact Us
+              </a>
+              <br />
+              <a 
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
+              >
+                <Github className="h-4 w-4" />
+                View on GitHub
+              </a>
+            </div>
           </div>
         </div>
 
@@ -118,9 +137,25 @@ export const Footer = () => {
             <p>
               © 2025 Kenya VASP Compliance Guide. Based on the Virtual Asset Service Providers Act, 2025 (enacted 15 October 2025).
             </p>
-            <p>
-              Last updated: January 2026
-            </p>
+            <div className="flex items-center gap-3">
+              <a 
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors inline-flex items-center gap-1"
+                title="View source on GitHub"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+              <a 
+                href={`${GITHUB_URL}/commits`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors underline-offset-2 hover:underline"
+              >
+                Last updated: January 2026
+              </a>
+            </div>
           </div>
         </div>
       </div>

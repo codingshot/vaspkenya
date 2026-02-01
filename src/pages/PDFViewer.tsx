@@ -29,8 +29,11 @@ import {
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-// Set up PDF.js worker with CDN for better performance
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+// Set up PDF.js worker - use unpkg for reliable version matching
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
 
 interface Comment {
   id: string;
@@ -307,9 +310,9 @@ const PDFViewer = () => {
 
   // Calculate page width to fit screen
   const pageWidth = useMemo(() => {
-    if (containerWidth === 0) return undefined;
-    // Default A4 ratio, fit to container with some margin
-    return Math.min(containerWidth * 0.95, 800);
+    if (containerWidth === 0) return 600; // Default width while loading
+    // Fit to container with some margin, max 900px for readability
+    return Math.min(containerWidth * 0.95, 900);
   }, [containerWidth]);
 
   return (
@@ -515,35 +518,46 @@ const PDFViewer = () => {
               )}
               
               <CardContent className="p-0" ref={containerRef}>
-                <div className="flex justify-center p-4 bg-muted/20 min-h-[500px] md:min-h-[700px]">
+                <div className="flex justify-center items-center p-4 bg-muted/20 min-h-[500px] md:min-h-[700px] overflow-auto">
                   {viewMode === 'single' ? (
                     <Document
                       file={pdfUrl}
                       onLoadSuccess={onDocumentLoadSuccess}
+                      onLoadError={(error) => console.error('PDF load error:', error)}
                       loading={
                         <div className="flex flex-col items-center justify-center h-96 gap-4">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                          <p className="text-muted-foreground">Loading PDF...</p>
+                          <p className="text-muted-foreground">Loading VASP Act PDF...</p>
+                          <p className="text-xs text-muted-foreground">44 pages • Official Document</p>
                         </div>
                       }
                       error={
                         <div className="flex items-center justify-center h-96 flex-col gap-4">
-                          <div className="text-destructive">Failed to load PDF</div>
-                          <a href={pdfUrl} download>
-                            <Button variant="outline">Download Instead</Button>
+                          <div className="text-destructive text-center">
+                            <p className="font-medium">Failed to load PDF</p>
+                            <p className="text-sm text-muted-foreground mt-2">The PDF viewer may be blocked. Try downloading instead.</p>
+                          </div>
+                          <a href={pdfUrl} download="VASP_Act_2025_Kenya.pdf">
+                            <Button variant="default" className="gap-2">
+                              <Download className="h-4 w-4" />
+                              Download PDF
+                            </Button>
                           </a>
                         </div>
                       }
                     >
                       <Page
                         pageNumber={pageNumber}
-                        width={pageWidth ? pageWidth * scale : undefined}
+                        width={pageWidth * scale}
                         renderTextLayer={true}
                         renderAnnotationLayer={true}
                         className="shadow-lg mx-auto"
                         loading={
-                          <div className="flex items-center justify-center h-96">
-                            <Loader2 className="h-6 w-6 animate-spin" />
+                          <div className="flex items-center justify-center h-96 w-full bg-muted/30 rounded-lg">
+                            <div className="text-center">
+                              <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                              <span className="text-sm text-muted-foreground">Loading page {pageNumber}...</span>
+                            </div>
                           </div>
                         }
                       />

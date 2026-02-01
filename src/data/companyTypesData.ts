@@ -327,6 +327,127 @@ export const companyTypesData: CompanyTypeData[] = [
       { title: 'OTC License', description: 'CMA/CBK license for OTC activities', resource: 'Section 3', resourceUrl: '/bill/part1-preliminary' }
     ]
   },
+  {
+    id: 'remittance-crypto',
+    name: 'Crypto Remittance Service',
+    icon: 'ArrowLeftRight',
+    description: 'Uses virtual assets as rails for cross-border money transfers between fiat currencies.',
+    isRegulated: true,
+    regulationStatus: 'fully-regulated',
+    regulatoryAuthority: ['Central Bank of Kenya'],
+    custodial: true,
+    riskLevel: 'high',
+    keyObligations: [
+      'CBK remittance license required',
+      'Full AML/CFT compliance per POCAMLA',
+      'Transaction limits and reporting',
+      'Customer due diligence for all transfers',
+      'Settlement and liquidity requirements',
+      'Cross-border compliance coordination'
+    ],
+    relevantSections: ['Section 3', 'Section 6', 'Section 33'],
+    pdfPages: [3, 4, 17],
+    examples: [
+      { name: 'BitPesa/AZA Finance', description: 'Crypto-powered B2B remittances', type: 'local' },
+      { name: 'Yellow Card', description: 'Cross-border crypto transfers', type: 'local' },
+      { name: 'Wise (crypto pilot)', description: 'International transfer service', type: 'international' }
+    ],
+    keywords: ['remittance', 'transfer', 'cross-border', 'international', 'send money', 'forex'],
+    licensingRequirements: [
+      { title: 'Remittance License', description: 'CBK money remittance authorization', resource: 'CBK', resourceUrl: 'https://www.centralbank.go.ke' },
+      { title: 'Forex Dealer License', description: 'If handling forex conversions', resource: 'CBK', resourceUrl: 'https://www.centralbank.go.ke' }
+    ]
+  },
+  {
+    id: 'crypto-lending',
+    name: 'Crypto Lending Platform',
+    icon: 'Landmark',
+    description: 'Provides lending services using virtual assets as collateral or lends virtual assets to borrowers for interest.',
+    isRegulated: true,
+    regulationStatus: 'fully-regulated',
+    regulatoryAuthority: ['Central Bank of Kenya', 'Capital Markets Authority'],
+    custodial: true,
+    riskLevel: 'high',
+    keyObligations: [
+      'Lending license from CBK may be required',
+      'Clear disclosure of interest rates and terms',
+      'Collateral management and custody requirements',
+      'Borrower creditworthiness assessment',
+      'Default and liquidation procedures',
+      'Consumer protection compliance'
+    ],
+    relevantSections: ['Section 3', 'Section 25', 'Section 32'],
+    pdfPages: [3, 13, 16],
+    examples: [
+      { name: 'Aave (if offered locally)', description: 'DeFi lending protocol', type: 'international' },
+      { name: 'Celsius (defunct)', description: 'CeFi lending platform example', type: 'international' },
+      { name: 'Nexo', description: 'Crypto lending and borrowing', type: 'international' }
+    ],
+    keywords: ['lending', 'loan', 'borrow', 'interest', 'collateral', 'credit', 'defi lending'],
+    licensingRequirements: [
+      { title: 'Credit Facility License', description: 'May require CBK authorization for lending', resource: 'CBK', resourceUrl: 'https://www.centralbank.go.ke' }
+    ]
+  },
+  {
+    id: 'crypto-derivatives',
+    name: 'Crypto Derivatives Platform',
+    icon: 'TrendingUp',
+    description: 'Offers derivatives products based on virtual assets including futures, options, and perpetual contracts.',
+    isRegulated: true,
+    regulationStatus: 'fully-regulated',
+    regulatoryAuthority: ['Capital Markets Authority'],
+    custodial: true,
+    riskLevel: 'high',
+    keyObligations: [
+      'CMA derivatives license required',
+      'Margin and collateral requirements',
+      'Position limits and risk management',
+      'Sophisticated investor restrictions',
+      'Real-time market surveillance',
+      'Settlement and clearing procedures'
+    ],
+    relevantSections: ['Section 3', 'Section 10', 'Section 25'],
+    pdfPages: [3, 6, 13],
+    examples: [
+      { name: 'Binance Futures', description: 'Crypto futures trading', type: 'international' },
+      { name: 'Deribit', description: 'Options and futures exchange', type: 'international' },
+      { name: 'BitMEX', description: 'Derivatives trading platform', type: 'international' }
+    ],
+    keywords: ['derivatives', 'futures', 'options', 'perpetual', 'leverage', 'margin', 'trading'],
+    licensingRequirements: [
+      { title: 'Derivatives License', description: 'CMA derivatives dealer authorization', resource: 'CMA', resourceUrl: 'https://www.cma.or.ke' }
+    ]
+  },
+  {
+    id: 'tokenization-platform',
+    name: 'Asset Tokenization Platform',
+    icon: 'Layers',
+    description: 'Tokenizes real-world assets (real estate, securities, commodities) on blockchain for fractional ownership.',
+    isRegulated: true,
+    regulationStatus: 'fully-regulated',
+    regulatoryAuthority: ['Capital Markets Authority', 'Central Bank of Kenya'],
+    custodial: false,
+    riskLevel: 'high',
+    keyObligations: [
+      'Security token offering compliance',
+      'Underlying asset custody arrangements',
+      'Investor qualification requirements',
+      'Continuous disclosure obligations',
+      'Secondary market considerations',
+      'Prospectus requirements for public offerings'
+    ],
+    relevantSections: ['Section 3', 'Section 35', 'Section 41'],
+    pdfPages: [3, 17, 19],
+    examples: [
+      { name: 'RealT', description: 'Real estate tokenization', type: 'international' },
+      { name: 'Securitize', description: 'Security token issuance', type: 'international' },
+      { name: 'tZero', description: 'Regulated security tokens', type: 'international' }
+    ],
+    keywords: ['tokenization', 'rwa', 'real world assets', 'security token', 'fractional', 'real estate token'],
+    licensingRequirements: [
+      { title: 'Security Token Approval', description: 'CMA approval for security token offerings', resource: 'CMA', resourceUrl: 'https://www.cma.or.ke' }
+    ]
+  },
 
   // PARTIALLY REGULATED / CONDITIONAL
   {
@@ -580,6 +701,146 @@ export const companyTypesData: CompanyTypeData[] = [
     keywords: ['news', 'media', 'journalism', 'reporting', 'analysis', 'blog'],
     licensingRequirements: [
       { title: 'No License Required', description: 'Media activities are exempt from VASP licensing', resource: 'Not applicable', resourceUrl: '' }
+    ]
+  },
+  {
+    id: 'validator-node',
+    name: 'Blockchain Validator / Node Operator',
+    icon: 'Cpu',
+    description: 'Operates validator nodes for proof-of-stake blockchains or full nodes for network infrastructure. Not a VASP activity.',
+    isRegulated: false,
+    regulationStatus: 'exempt',
+    regulatoryAuthority: [],
+    custodial: false,
+    riskLevel: 'low',
+    keyObligations: [
+      'No VASP license required for validation',
+      'Staking rewards taxable as income (KRA)',
+      'Operating as staking-as-a-service for others may trigger requirements',
+      'Infrastructure security best practices'
+    ],
+    relevantSections: [],
+    pdfPages: [],
+    examples: [
+      { name: 'Ethereum validators', description: 'ETH staking node operators', type: 'international' },
+      { name: 'Cosmos validators', description: 'IBC network validators', type: 'international' },
+      { name: 'Solana validators', description: 'SOL network validators', type: 'international' }
+    ],
+    keywords: ['validator', 'node', 'staking', 'proof of stake', 'infrastructure', 'consensus'],
+    licensingRequirements: [
+      { title: 'No License Required', description: 'Pure validation/node operation is exempt', resource: 'Not applicable', resourceUrl: '' }
+    ]
+  },
+  {
+    id: 'blockchain-analytics',
+    name: 'Blockchain Analytics Provider',
+    icon: 'Search',
+    description: 'Provides on-chain data analysis, transaction monitoring, and compliance tools without handling user funds.',
+    isRegulated: false,
+    regulationStatus: 'exempt',
+    regulatoryAuthority: [],
+    custodial: false,
+    riskLevel: 'low',
+    keyObligations: [
+      'No VASP license required',
+      'Data protection compliance',
+      'Client confidentiality',
+      'Accuracy of analytics reporting'
+    ],
+    relevantSections: [],
+    pdfPages: [],
+    examples: [
+      { name: 'Chainalysis', description: 'Blockchain investigation tools', type: 'international' },
+      { name: 'Elliptic', description: 'Crypto compliance analytics', type: 'international' },
+      { name: 'Nansen', description: 'On-chain analytics platform', type: 'international' }
+    ],
+    keywords: ['analytics', 'data', 'monitoring', 'compliance', 'investigation', 'tracking', 'chainalysis'],
+    licensingRequirements: [
+      { title: 'No License Required', description: 'Analytics services are exempt from VASP licensing', resource: 'Not applicable', resourceUrl: '' }
+    ]
+  },
+  {
+    id: 'hardware-wallet-mfg',
+    name: 'Hardware Wallet Manufacturer',
+    icon: 'Wallet',
+    description: 'Manufactures and sells hardware devices for self-custody of virtual assets. Does not take custody of user assets.',
+    isRegulated: false,
+    regulationStatus: 'exempt',
+    regulatoryAuthority: [],
+    custodial: false,
+    riskLevel: 'low',
+    keyObligations: [
+      'No VASP license required',
+      'Product safety and quality standards',
+      'Consumer protection disclosures',
+      'Warranty and support obligations'
+    ],
+    relevantSections: ['Section 3(2)'],
+    pdfPages: [3],
+    examples: [
+      { name: 'Ledger', description: 'Hardware wallet manufacturer', type: 'international' },
+      { name: 'Trezor', description: 'Hardware security devices', type: 'international' },
+      { name: 'Keystone', description: 'Air-gapped hardware wallets', type: 'international' }
+    ],
+    keywords: ['hardware', 'wallet', 'device', 'cold storage', 'manufacturing', 'ledger', 'trezor'],
+    licensingRequirements: [
+      { title: 'No License Required', description: 'Hardware manufacturing without custody is exempt', resource: 'Section 3(2)', resourceUrl: '/bill/part1-preliminary' }
+    ]
+  },
+  {
+    id: 'research-academic',
+    name: 'Blockchain Research Institution',
+    icon: 'GraduationCap',
+    description: 'Conducts academic or commercial research on blockchain technology without providing financial services.',
+    isRegulated: false,
+    regulationStatus: 'exempt',
+    regulatoryAuthority: [],
+    custodial: false,
+    riskLevel: 'low',
+    keyObligations: [
+      'No VASP license required',
+      'Research ethics compliance',
+      'Publication and IP considerations',
+      'Funding disclosure requirements'
+    ],
+    relevantSections: ['Section 5(2)'],
+    pdfPages: [4],
+    examples: [
+      { name: 'University blockchain labs', description: 'Academic research institutions', type: 'local' },
+      { name: 'Think tanks', description: 'Policy research organizations', type: 'international' },
+      { name: 'Industry research groups', description: 'Consortium research', type: 'international' }
+    ],
+    keywords: ['research', 'academic', 'university', 'study', 'analysis', 'policy', 'think tank'],
+    licensingRequirements: [
+      { title: 'No License Required', description: 'Pure research activities are exempt', resource: 'Section 5(2)', resourceUrl: '/bill/part1-preliminary' }
+    ]
+  },
+  {
+    id: 'dao-governance',
+    name: 'DAO / Governance Token Holder',
+    icon: 'Building',
+    description: 'Participates in decentralized autonomous organizations or holds governance tokens for voting. Individual participation is not regulated.',
+    isRegulated: false,
+    regulationStatus: 'exempt',
+    regulatoryAuthority: [],
+    custodial: false,
+    riskLevel: 'low',
+    keyObligations: [
+      'Individual DAO participation is not regulated',
+      'Operating a DAO as a business may require assessment',
+      'Tax obligations on any income/rewards',
+      'Personal investment responsibility'
+    ],
+    relevantSections: ['Section 9(2)'],
+    pdfPages: [6],
+    examples: [
+      { name: 'Uniswap governance', description: 'UNI token voting', type: 'international' },
+      { name: 'Aave governance', description: 'AAVE token holders', type: 'international' },
+      { name: 'MakerDAO', description: 'MKR governance participants', type: 'international' }
+    ],
+    keywords: ['dao', 'governance', 'voting', 'decentralized', 'autonomous', 'token holder'],
+    licensingRequirements: [
+      { title: 'Individual Exemption', description: 'Personal DAO participation is not VASP activity', resource: 'Not applicable', resourceUrl: '' }
     ]
   }
 ];
