@@ -142,7 +142,17 @@ const penaltyTypes = [
   }
 ];
 
-const formatCurrency = (amount: number) => {
+// Exchange rate as of January 2026 (approximate)
+const KES_TO_USD_RATE = 0.0077; // 1 KES ≈ $0.0077 (roughly 130 KES per USD)
+
+const formatCurrency = (amount: number, currency: 'KES' | 'USD' = 'KES') => {
+  if (currency === 'USD') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount * KES_TO_USD_RATE);
+  }
   return new Intl.NumberFormat('en-KE', {
     style: 'currency',
     currency: 'KES',
@@ -352,6 +362,7 @@ export const PenaltyCalculator = () => {
                         <div className="p-4 rounded-lg bg-muted/50 text-center">
                           <p className="text-xs text-muted-foreground mb-1">Base Fine</p>
                           <p className="font-bold text-lg">{formatCurrency(penalty.basePenalty)}</p>
+                          <p className="text-[10px] text-muted-foreground">≈ {formatCurrency(penalty.basePenalty, 'USD')}</p>
                         </div>
                         <div className="p-4 rounded-lg bg-muted/50 text-center">
                           <p className="text-xs text-muted-foreground mb-1">Continuing Penalty</p>
@@ -368,7 +379,7 @@ export const PenaltyCalculator = () => {
 
                       <Card className="border-destructive bg-destructive/5">
                         <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
                             <div>
                               <p className="text-sm font-medium">Total Estimated Fine</p>
                               {penalty.cappedAt && (
@@ -377,9 +388,14 @@ export const PenaltyCalculator = () => {
                                 </p>
                               )}
                             </div>
-                            <p className="text-2xl md:text-3xl font-bold text-destructive">
-                              {formatCurrency(penalty.totalFine)}
-                            </p>
+                            <div className="text-right">
+                              <p className="text-2xl md:text-3xl font-bold text-destructive">
+                                {formatCurrency(penalty.totalFine)}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                ≈ {formatCurrency(penalty.totalFine, 'USD')}
+                              </p>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>

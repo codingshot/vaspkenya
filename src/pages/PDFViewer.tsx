@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { 
   ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Search, 
   FileText, MessageSquare, Download, 
   Trash2, Edit3, X, Check, BookOpen, Grid, Loader2,
-  ArrowLeft, ArrowRight, Home
+  ArrowLeft, ArrowRight, Home, Share2, Copy
 } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { toast } from '@/components/ui/sonner';
 import {
   Dialog,
   DialogContent,
@@ -53,13 +54,15 @@ interface PDFRevision {
 const STORAGE_KEY = 'vasp-pdf-revisions';
 
 const PDFViewer = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
   const initialSearch = searchParams.get('search') || '';
+  const initialZoom = parseFloat(searchParams.get('zoom') || '1.0');
   
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(initialPage);
-  const [scale, setScale] = useState(1.0);
+  const [scale, setScale] = useState(initialZoom);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [searchResults, setSearchResults] = useState<{page: number; text: string}[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -107,6 +110,17 @@ const PDFViewer = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [pageNumber, numPages]);
+
+  // Update URL when page or zoom changes
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set('page', pageNumber.toString());
+    if (searchQuery) params.set('search', searchQuery);
+    if (scale !== 1.0) params.set('zoom', scale.toFixed(1));
+    
+    // Update URL without causing navigation
+    window.history.replaceState({}, '', `/pdf-viewer?${params.toString()}`);
+  }, [pageNumber, scale, searchQuery]);
 
   // Auto-search if URL has search param
   useEffect(() => {
@@ -308,6 +322,19 @@ const PDFViewer = () => {
     URL.revokeObjectURL(url);
   };
 
+  const copyShareableLink = () => {
+    const params = new URLSearchParams();
+    params.set('page', pageNumber.toString());
+    if (searchQuery) params.set('search', searchQuery);
+    if (scale !== 1.0) params.set('zoom', scale.toFixed(1));
+    
+    const url = `${window.location.origin}/pdf-viewer?${params.toString()}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Link copied to clipboard!', {
+      description: `Page ${pageNumber} link ready to share`
+    });
+  };
+
   // Calculate page width to fit screen
   const pageWidth = useMemo(() => {
     if (containerWidth === 0) return 600; // Default width while loading
@@ -424,6 +451,16 @@ const PDFViewer = () => {
                     >
                       <MessageSquare className="h-4 w-4" />
                       <span className="hidden sm:inline">Notes</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={copyShareableLink}
+                      className="gap-1"
+                      title="Copy shareable link"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      <span className="hidden sm:inline">Share</span>
                     </Button>
                     <a href={pdfUrl} download="VASP_Act_2025_Kenya.pdf">
                       <Button variant="outline" size="sm" className="gap-1">

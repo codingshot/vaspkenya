@@ -1,8 +1,8 @@
-import { Shield, ExternalLink, FileText, Github, Mail } from 'lucide-react';
+import { Shield, ExternalLink, FileText, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GITHUB_URL = 'https://github.com/codingshot/vaspkenya';
-const CONTACT_EMAIL = 'info@vaspkenya.com';
+const CONTACT_URL = 'https://x.com/plgurel';
 
 export const Footer = () => {
   const scrollToSection = (id: string) => {
@@ -111,11 +111,15 @@ export const Footer = () => {
             </p>
             <div className="space-y-2">
               <a 
-                href={`mailto:${CONTACT_EMAIL}`}
+                href={CONTACT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
               >
-                <Mail className="h-4 w-4" />
-                Contact Us
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Contact on X
               </a>
               <br />
               <a 
