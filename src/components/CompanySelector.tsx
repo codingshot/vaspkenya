@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Wallet, ArrowLeftRight, CreditCard, Handshake, 
-  TrendingUp, PieChart, Rocket, Building2, CheckCircle2, AlertTriangle,
+  TrendingUp, PieChart, Rocket, Building2, CheckCircle2, AlertTriangle, AlertCircle, Info,
   Building, Coins, Layers, Image, Landmark, Search, Code, Cpu, GraduationCap, Newspaper,
   Filter, ExternalLink
 } from 'lucide-react';
@@ -30,6 +30,7 @@ const iconMap: Record<string, React.ReactNode> = {
   'Cpu': <Cpu className="h-5 w-5 md:h-6 md:w-6" />,
   'GraduationCap': <GraduationCap className="h-5 w-5 md:h-6 md:w-6" />,
   'Newspaper': <Newspaper className="h-5 w-5 md:h-6 md:w-6" />,
+  'Search': <Search className="h-5 w-5 md:h-6 md:w-6" />,
 };
 
 export const CompanySelector = () => {
@@ -124,8 +125,10 @@ export const CompanySelector = () => {
               <div className={`inline-flex p-2 md:p-3 rounded-lg mb-2 md:mb-3 ${
                 selectedType?.id === type.id 
                   ? 'bg-primary text-primary-foreground' 
-                  : type.isRegulated
-                  ? 'bg-muted text-foreground'
+                  : type.regulationStatus === 'fully-regulated'
+                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                  : type.regulationStatus === 'partially-regulated'
+                  ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
                   : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
               }`}>
                 {iconMap[type.icon] || <Building className="h-5 w-5 md:h-6 md:w-6" />}
@@ -134,13 +137,19 @@ export const CompanySelector = () => {
               <div className="flex flex-wrap gap-1 mb-1">
                 <Badge 
                   variant="outline" 
-                  className={`text-[8px] md:text-[10px] ${
-                    type.isRegulated 
+                  className={`text-[8px] md:text-[10px] flex items-center gap-0.5 ${
+                    type.regulationStatus === 'fully-regulated'
                       ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-400' 
+                      : type.regulationStatus === 'partially-regulated'
+                      ? 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400'
                       : 'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950/30 dark:text-green-400'
                   }`}
                 >
-                  {type.isRegulated ? 'Regulated' : 'Exempt'}
+                  {type.regulationStatus === 'fully-regulated' && <AlertTriangle className="h-2.5 w-2.5" />}
+                  {type.regulationStatus === 'partially-regulated' && <AlertCircle className="h-2.5 w-2.5" />}
+                  {type.regulationStatus === 'exempt' && <CheckCircle2 className="h-2.5 w-2.5" />}
+                  {type.regulationStatus === 'fully-regulated' ? 'Licensed Required' : 
+                   type.regulationStatus === 'partially-regulated' ? 'Conditional' : 'Exempt'}
                 </Badge>
               </div>
               <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 hidden sm:block">
