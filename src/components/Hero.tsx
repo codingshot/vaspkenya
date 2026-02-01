@@ -1,16 +1,9 @@
-import { Shield, FileText, ArrowDown, Building2, HelpCircle, CheckSquare, Calculator, Calendar, BookOpen } from 'lucide-react';
+import { Shield, FileText, ArrowDown, Building2, HelpCircle, CheckSquare, Calculator, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export const Hero = () => {
-  const scrollToSelector = () => {
-    const element = document.getElementById('company-selector');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -19,11 +12,11 @@ export const Hero = () => {
   };
 
   const quickActions = [
-    { id: 'company-selector', label: 'Business Types', icon: Building2, color: 'bg-blue-500/10 text-blue-600 hover:bg-blue-500/20' },
-    { id: 'questionnaire', label: 'Quick Assessment', icon: HelpCircle, color: 'bg-purple-500/10 text-purple-600 hover:bg-purple-500/20' },
-    { id: 'compliance-tracker', label: 'Compliance Checklist', icon: CheckSquare, color: 'bg-green-500/10 text-green-600 hover:bg-green-500/20' },
-    { id: 'penalty-calculator', label: 'Penalty Calculator', icon: Calculator, color: 'bg-red-500/10 text-red-600 hover:bg-red-500/20' },
-    { id: 'test-questions', label: 'Knowledge Quiz', icon: BookOpen, color: 'bg-amber-500/10 text-amber-600 hover:bg-amber-500/20' },
+    { id: 'company-selector', label: 'Business Types', icon: Building2, color: 'bg-white/20 text-white hover:bg-white/30 border border-white/30' },
+    { id: 'questionnaire', label: 'Quick Assessment', icon: HelpCircle, color: 'bg-white/20 text-white hover:bg-white/30 border border-white/30' },
+    { id: 'compliance-tracker', label: 'Compliance Checklist', icon: CheckSquare, color: 'bg-white/20 text-white hover:bg-white/30 border border-white/30' },
+    { id: 'penalty-calculator', label: 'Penalty Calculator', icon: Calculator, color: 'bg-white/20 text-white hover:bg-white/30 border border-white/30' },
+    { id: 'test-questions', label: 'Knowledge Quiz', icon: BookOpen, color: 'bg-white/20 text-white hover:bg-white/30 border border-white/30' },
   ];
 
   return (
@@ -58,7 +51,7 @@ export const Hero = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
             <Button 
               size="lg" 
-              onClick={scrollToSelector}
+              onClick={() => scrollToSection('company-selector')}
               className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 gap-2 w-full sm:w-auto"
             >
               Check Your Requirements
@@ -71,55 +64,25 @@ export const Hero = () => {
                 className="bg-white/20 text-primary-foreground border-2 border-primary-foreground/30 hover:bg-white/30 gap-2 w-full backdrop-blur-sm"
               >
                 <FileText className="h-4 w-4" />
-                View Full Act (44 pages)
-              </Button>
-            </Link>
-            <Link to="/timeline" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                variant="ghost"
-                className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 gap-2 w-full"
-              >
-                <Calendar className="h-4 w-4" />
-                Legislative History
+                View Full Act
               </Button>
             </Link>
           </div>
 
-          {/* Quick Actions */}
-          <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 mb-8">
-            <p className="text-xs text-primary-foreground/70 mb-3">Quick Actions</p>
-            <div className="flex flex-wrap justify-center gap-2">
+          {/* Quick Actions - Now Prominent */}
+          <div className="bg-black/30 backdrop-blur-sm rounded-xl p-5 border border-white/10">
+            <p className="text-sm font-medium text-primary-foreground mb-4">Quick Actions</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
               {quickActions.map((action) => (
                 <button
                   key={action.id}
                   onClick={() => scrollToSection(action.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${action.color}`}
+                  className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${action.color}`}
                 >
-                  <action.icon className="h-3 w-3" />
-                  {action.label}
+                  <action.icon className="h-5 w-5" />
+                  <span className="text-xs text-center leading-tight">{action.label}</span>
                 </button>
               ))}
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-6 border-t border-primary-foreground/20">
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold text-primary-foreground">44</div>
-              <div className="text-xs text-primary-foreground/70">Pages</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold text-primary-foreground">47</div>
-              <div className="text-xs text-primary-foreground/70">Sections</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold text-primary-foreground">17</div>
-              <div className="text-xs text-primary-foreground/70">Business Types</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl md:text-2xl font-bold text-primary-foreground">6 Mo</div>
-              <div className="text-xs text-primary-foreground/70">Transition Period</div>
             </div>
           </div>
         </div>

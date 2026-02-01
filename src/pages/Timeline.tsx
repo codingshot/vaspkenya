@@ -20,11 +20,16 @@ interface TimelineEvent {
   sources?: { label: string; url: string }[];
 }
 
+// Fact-checked dates from official sources:
+// - Parliament of Kenya (parliament.go.ke)
+// - Central Bank of Kenya (centralbank.go.ke)
+// - EY Tax News (taxnews.ey.com)
+// - Bowmans Law (bowmanslaw.com)
 const timelineEvents: TimelineEvent[] = [
   {
     date: '2024',
     title: 'Policy Development & Draft Bill',
-    description: 'National Treasury produced the Draft National Policy on Virtual Assets and VASPs, with the VASP Bill 2024 prepared from private-sector input.',
+    description: 'National Treasury produced the Draft National Policy on Virtual Assets and VASPs, with the VASP Bill 2024 prepared from private-sector input and presented to the National Assembly in March 2024.',
     status: 'completed',
     type: 'draft',
     details: [
@@ -39,22 +44,22 @@ const timelineEvents: TimelineEvent[] = [
   },
   {
     date: '4 April 2025',
-    title: 'Updated Bill Tabled in Parliament',
-    description: 'The "Updated" Virtual Asset Service Providers Bill, 2025 was officially tabled before Parliament.',
+    title: 'Bill Tabled for First Reading',
+    description: 'The Virtual Asset Service Providers Bill (National Assembly Bill No. 15 of 2025) was officially tabled for its First Reading in Parliament.',
     status: 'completed',
     type: 'milestone',
     details: [
       'Bill officially tabled in National Assembly',
       'Assigned to Departmental Committee on Finance and National Planning',
-      '44-page bill covering comprehensive VASP regulation'
+      '44-page bill covering comprehensive VASP regulation (47 sections)'
     ],
     sources: [
-      { label: 'Parliament of Kenya', url: 'https://parliament.go.ke' }
+      { label: 'Parliament of Kenya', url: 'https://parliament.go.ke/node/23602' }
     ]
   },
   {
     date: 'April 2025',
-    title: 'First Reading',
+    title: 'First Reading & Committee Assignment',
     description: 'Formal introduction of the Bill; read a first time and committed to the Departmental Committee on Finance and National Planning.',
     status: 'completed',
     type: 'approval',
@@ -67,35 +72,38 @@ const timelineEvents: TimelineEvent[] = [
   {
     date: '25 April 2025',
     title: 'Public Participation & Committee Stage',
-    description: 'The Finance and National Planning Committee invited public memoranda, then prepared its report and recommendations.',
+    description: 'The Finance and National Planning Committee invited public memoranda, then prepared its report and recommendations for Second Reading.',
     status: 'completed',
     type: 'review',
     details: [
       'Public invited to submit written memoranda by 25 April 2025',
-      'Industry stakeholders provide feedback',
-      'Committee prepares report for Second Reading',
-      'Bowmans Law and other legal practitioners submit analysis'
+      'Industry stakeholders (including Bowmans Law) provide feedback',
+      'Committee prepares report for Second Reading'
     ],
     sources: [
       { label: 'Bowmans Law Analysis', url: 'https://bowmanslaw.com' }
     ]
   },
   {
-    date: 'May-Sept 2025',
-    title: 'Second Reading (Plenary Debate)',
-    description: 'MPs debated the general principles and merits of the Bill and voted to move it forward to Committee of the Whole House.',
+    date: '24 June 2025',
+    title: 'Second Reading Commenced',
+    description: 'The Second Reading of the Bill commenced, led by Hon. Kuria Kimani (Molo), Chairperson of the Departmental Committee on Finance and National Planning.',
     status: 'completed',
     type: 'approval',
     details: [
-      'Debate on principles and policy objectives',
-      'MPs discuss regulatory scope and penalties',
-      'Vote to proceed to Committee stage'
+      'Debate on principles and policy objectives began',
+      'Hon. Kimani highlighted Kenya\'s $2B annual virtual asset trading volume',
+      'Kenya ranked 3rd in Africa for on-chain transactions',
+      'Approximately 6.1 million Kenyan crypto users cited'
+    ],
+    sources: [
+      { label: 'Parliament News', url: 'https://parliament.go.ke' }
     ]
   },
   {
     date: '2 October 2025',
     title: 'Committee of the Whole House',
-    description: 'The Bill was taken up in the Committee of the Whole House, where each clause was debated, amended and approved.',
+    description: 'The Bill was taken up in the Committee of the Whole House, where each of the 47 clauses was debated, amended and approved.',
     status: 'completed',
     type: 'review',
     details: [
@@ -109,24 +117,24 @@ const timelineEvents: TimelineEvent[] = [
     ]
   },
   {
-    date: '14 October 2025',
+    date: '7 October 2025',
     title: 'Third Reading & Passage',
-    description: 'After Committee stage, the Bill went to Third Reading and received final approval by MPs.',
+    description: 'The Bill was passed by the Kenyan Parliament after Third Reading and transmitted to the President for assent.',
     status: 'completed',
     type: 'approval',
     details: [
       'Final vote on the complete Bill',
-      'Passed by National Assembly',
+      'Passed by National Assembly on 7 October 2025',
       'Transmitted to President for assent'
     ],
     sources: [
-      { label: 'Yogupay Blog', url: 'https://yogupay.com' }
+      { label: 'Bowmans Law', url: 'https://bowmanslaw.com' }
     ]
   },
   {
     date: '15 October 2025',
     title: 'Presidential Assent',
-    description: 'The President gave assent, making it law as the Virtual Asset Service Providers Act, 2025.',
+    description: 'The President gave assent to the Bill, making it law as the Virtual Asset Service Providers Act, 2025.',
     status: 'completed',
     type: 'assent',
     details: [
@@ -135,36 +143,37 @@ const timelineEvents: TimelineEvent[] = [
       'Kenya becomes one of first African nations with comprehensive VASP law'
     ],
     sources: [
-      { label: 'Yogupay: VASP Bill Is Now Law', url: 'https://yogupay.com' }
+      { label: 'Bowmans Law Confirmation', url: 'https://bowmanslaw.com' }
     ]
   },
   {
-    date: 'Late 2025',
-    title: 'Gazettement & Implementation Notice',
-    description: 'The Act is gazetted and CBK/CMA issue joint public notice on implementation and licensing.',
+    date: '21 October 2025',
+    title: 'Act Comes Into Force',
+    description: 'The Virtual Asset Service Providers Act, 2025 officially came into force, establishing the regulatory framework.',
     status: 'completed',
     type: 'milestone',
     details: [
       'Act published in Kenya Gazette',
-      'CBK and CMA issue joint implementation notice',
-      'Licensing guidelines and procedures announced',
-      'Application portal preparation begins'
+      'Effective date: 21 October 2025',
+      'CBK and CMA designated as dual regulators',
+      'Licensing requirements now in effect'
     ],
     sources: [
+      { label: 'EY Tax News', url: 'https://taxnews.ey.com/news/2025-2314-kenya-enacts-virtual-asset-service-providers-act-2025-a-new-regulatory-era' },
       { label: 'CBK Public Notice', url: 'https://centralbank.go.ke' }
     ]
   },
   {
-    date: '2026',
-    title: 'Commencement & Transitional Period',
-    description: 'Act comes into full force; 6-month transitional period for existing operators to apply for licenses.',
+    date: '2025-2026',
+    title: 'Transitional Period (1 Year)',
+    description: 'Existing VASPs have a one-year grace period to apply for licenses and comply with the new requirements.',
     status: 'current',
     type: 'milestone',
     details: [
-      '6-month transitional period for existing VASPs',
-      'CMA and CBK accept license applications',
+      'One-year transitional period for existing VASPs (per Section 47)',
+      'CMA and CBK accepting license applications',
       'Existing operators must register within transitional period',
-      'Full enforcement begins after transitional period'
+      'Full enforcement begins after transitional period ends'
     ]
   }
 ];

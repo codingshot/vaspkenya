@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { 
   ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Search, 
   FileText, MessageSquare, Download, 
-  Trash2, Edit3, X, Check, BookOpen, Grid
+  Trash2, Edit3, X, Check, BookOpen, Grid, Loader2,
+  ArrowLeft, ArrowRight, Home
 } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -24,11 +25,12 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString();
+// Import PDF.js styles
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Set up PDF.js worker with CDN for better performance
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface Comment {
   id: string;
@@ -70,9 +72,39 @@ const PDFViewer = () => {
   const [viewMode, setViewMode] = useState<'single' | 'thumbnails'>('single');
   const [textExtractionProgress, setTextExtractionProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const pdfUrl = '/documents/VASP_Bill_2025_Kenya.pdf';
   
+  // Calculate responsive scale based on container width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth - 32; // Account for padding
+        setContainerWidth(width);
+      }
+    };
+    
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && pageNumber > 1) {
+        setPageNumber(p => p - 1);
+      } else if (e.key === 'ArrowRight' && pageNumber < numPages) {
+        setPageNumber(p => p + 1);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [pageNumber, numPages]);
+
   // Auto-search if URL has search param
   useEffect(() => {
     if (initialSearch && Object.keys(pdfText).length > 0) {
@@ -102,7 +134,7 @@ const PDFViewer = () => {
   const onDocumentLoadSuccess = async ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     setIsLoading(false);
-    // Extract text from all pages
+    // Extract text from all pages in background
     extractAllText(numPages);
   };
 
@@ -273,6 +305,13 @@ const PDFViewer = () => {
     URL.revokeObjectURL(url);
   };
 
+  // Calculate page width to fit screen
+  const pageWidth = useMemo(() => {
+    if (containerWidth === 0) return undefined;
+    // Default A4 ratio, fit to container with some margin
+    return Math.min(containerWidth * 0.95, 800);
+  }, [containerWidth]);
+
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
       <Header />
@@ -280,9 +319,12 @@ const PDFViewer = () => {
       <main className="flex-1 container px-2 md:px-4 py-4 md:py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-          <Link to="/" className="hover:text-foreground">Home</Link>
+          <Link to="/" className="hover:text-foreground flex items-center gap-1">
+            <Home className="h-3 w-3" />
+            Home
+          </Link>
           <ChevronRight className="h-4 w-4" />
-          <span className="text-foreground font-medium">VASP Bill PDF Viewer</span>
+          <span className="text-foreground font-medium">VASP Act 2025 - Official PDF</span>
         </nav>
 
         <div className="grid gap-4 lg:grid-cols-[1fr_350px]">
@@ -299,6 +341,7 @@ const PDFViewer = () => {
                       size="icon"
                       onClick={() => goToPage(pageNumber - 1)}
                       disabled={pageNumber <= 1}
+                      aria-label="Previous page"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
@@ -310,14 +353,16 @@ const PDFViewer = () => {
                         className="w-14 h-8 text-center"
                         min={1}
                         max={numPages}
+                        aria-label="Page number"
                       />
-                      <span className="text-muted-foreground">/ {numPages}</span>
+                      <span className="text-muted-foreground">/ {numPages || 44}</span>
                     </div>
                     <Button 
                       variant="outline" 
                       size="icon"
                       onClick={() => goToPage(pageNumber + 1)}
                       disabled={pageNumber >= numPages}
+                      aria-label="Next page"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -329,6 +374,7 @@ const PDFViewer = () => {
                       variant="outline" 
                       size="icon"
                       onClick={() => setScale(s => Math.max(0.5, s - 0.1))}
+                      aria-label="Zoom out"
                     >
                       <ZoomOut className="h-4 w-4" />
                     </Button>
@@ -337,6 +383,7 @@ const PDFViewer = () => {
                       variant="outline" 
                       size="icon"
                       onClick={() => setScale(s => Math.min(2, s + 0.1))}
+                      aria-label="Zoom in"
                     >
                       <ZoomIn className="h-4 w-4" />
                     </Button>
@@ -373,9 +420,9 @@ const PDFViewer = () => {
                       className="gap-1"
                     >
                       <MessageSquare className="h-4 w-4" />
-                      <span className="hidden sm:inline">Revisions</span>
+                      <span className="hidden sm:inline">Notes</span>
                     </Button>
-                    <a href={pdfUrl} download>
+                    <a href={pdfUrl} download="VASP_Act_2025_Kenya.pdf">
                       <Button variant="outline" size="sm" className="gap-1">
                         <Download className="h-4 w-4" />
                         <span className="hidden sm:inline">Download</span>
@@ -386,8 +433,9 @@ const PDFViewer = () => {
 
                 {/* Text Extraction Progress */}
                 {textExtractionProgress > 0 && textExtractionProgress < 100 && (
-                  <div className="mt-3 text-sm text-muted-foreground">
-                    Extracting text for search: {textExtractionProgress}%
+                  <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Indexing for search: {textExtractionProgress}%
                   </div>
                 )}
               </CardContent>
@@ -442,76 +490,119 @@ const PDFViewer = () => {
               </CardContent>
             </Card>
 
-            {/* PDF Display */}
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <ScrollArea className="h-[600px] md:h-[800px]">
-                  <div className="flex justify-center p-4 bg-muted/20">
-                    {viewMode === 'single' ? (
-                      <Document
-                        file={pdfUrl}
-                        onLoadSuccess={onDocumentLoadSuccess}
+            {/* PDF Display with Navigation Arrows */}
+            <Card className="overflow-hidden relative">
+              {/* Floating Navigation Arrows */}
+              {viewMode === 'single' && numPages > 0 && (
+                <>
+                  <button
+                    onClick={() => goToPage(pageNumber - 1)}
+                    disabled={pageNumber <= 1}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/90 hover:bg-background border shadow-lg rounded-full p-3 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-110"
+                    aria-label="Previous page"
+                  >
+                    <ArrowLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={() => goToPage(pageNumber + 1)}
+                    disabled={pageNumber >= numPages}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/90 hover:bg-background border shadow-lg rounded-full p-3 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-110"
+                    aria-label="Next page"
+                  >
+                    <ArrowRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
+              
+              <CardContent className="p-0" ref={containerRef}>
+                <div className="flex justify-center p-4 bg-muted/20 min-h-[500px] md:min-h-[700px]">
+                  {viewMode === 'single' ? (
+                    <Document
+                      file={pdfUrl}
+                      onLoadSuccess={onDocumentLoadSuccess}
+                      loading={
+                        <div className="flex flex-col items-center justify-center h-96 gap-4">
+                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                          <p className="text-muted-foreground">Loading PDF...</p>
+                        </div>
+                      }
+                      error={
+                        <div className="flex items-center justify-center h-96 flex-col gap-4">
+                          <div className="text-destructive">Failed to load PDF</div>
+                          <a href={pdfUrl} download>
+                            <Button variant="outline">Download Instead</Button>
+                          </a>
+                        </div>
+                      }
+                    >
+                      <Page
+                        pageNumber={pageNumber}
+                        width={pageWidth ? pageWidth * scale : undefined}
+                        renderTextLayer={true}
+                        renderAnnotationLayer={true}
+                        className="shadow-lg mx-auto"
                         loading={
                           <div className="flex items-center justify-center h-96">
-                            <div className="text-muted-foreground">Loading PDF...</div>
+                            <Loader2 className="h-6 w-6 animate-spin" />
                           </div>
                         }
-                        error={
-                          <div className="flex items-center justify-center h-96 flex-col gap-4">
-                            <div className="text-destructive">Failed to load PDF</div>
-                            <a href={pdfUrl} download>
-                              <Button variant="outline">Download Instead</Button>
-                            </a>
-                          </div>
-                        }
-                      >
-                        <Page
-                          pageNumber={pageNumber}
-                          scale={scale}
-                          renderTextLayer={true}
-                          renderAnnotationLayer={true}
-                          className="shadow-lg"
-                        />
-                      </Document>
-                    ) : (
-                      <Document
-                        file={pdfUrl}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                      >
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {Array.from({ length: numPages }, (_, i) => (
-                            <button
-                              key={i + 1}
-                              onClick={() => {
-                                setPageNumber(i + 1);
-                                setViewMode('single');
-                              }}
-                              className={`relative border-2 rounded-lg overflow-hidden transition-all hover:border-primary ${
-                                pageNumber === i + 1 ? 'border-primary ring-2 ring-primary/20' : 'border-transparent'
-                              }`}
-                            >
-                              <Page
-                                pageNumber={i + 1}
-                                scale={0.3}
-                                renderTextLayer={false}
-                                renderAnnotationLayer={false}
-                              />
-                              <div className="absolute bottom-0 left-0 right-0 bg-background/80 py-1 text-center text-xs font-medium">
-                                Page {i + 1}
-                              </div>
-                              {activeRevision?.comments.some(c => c.page === i + 1) && (
-                                <Badge className="absolute top-2 right-2" variant="secondary">
-                                  <MessageSquare className="h-3 w-3 mr-1" />
-                                  {activeRevision.comments.filter(c => c.page === i + 1).length}
-                                </Badge>
-                              )}
-                            </button>
-                          ))}
+                      />
+                    </Document>
+                  ) : (
+                    <Document
+                      file={pdfUrl}
+                      onLoadSuccess={onDocumentLoadSuccess}
+                      loading={
+                        <div className="flex items-center justify-center h-96">
+                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
-                      </Document>
-                    )}
+                      }
+                    >
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {Array.from({ length: numPages }, (_, i) => (
+                          <button
+                            key={i + 1}
+                            onClick={() => {
+                              setPageNumber(i + 1);
+                              setViewMode('single');
+                            }}
+                            className={`relative border-2 rounded-lg overflow-hidden transition-all hover:border-primary ${
+                              pageNumber === i + 1 ? 'border-primary ring-2 ring-primary/20' : 'border-transparent'
+                            }`}
+                          >
+                            <Page
+                              pageNumber={i + 1}
+                              width={150}
+                              renderTextLayer={false}
+                              renderAnnotationLayer={false}
+                            />
+                            <div className="absolute bottom-0 left-0 right-0 bg-background/80 py-1 text-center text-xs font-medium">
+                              Page {i + 1}
+                            </div>
+                            {activeRevision?.comments.some(c => c.page === i + 1) && (
+                              <Badge className="absolute top-2 right-2" variant="secondary">
+                                <MessageSquare className="h-3 w-3 mr-1" />
+                                {activeRevision.comments.filter(c => c.page === i + 1).length}
+                              </Badge>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </Document>
+                  )}
+                </div>
+
+                {/* Page indicator at bottom */}
+                {viewMode === 'single' && numPages > 0 && (
+                  <div className="flex items-center justify-center gap-2 py-3 bg-muted/50 border-t">
+                    <span className="text-sm text-muted-foreground">
+                      Page {pageNumber} of {numPages}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      • Use arrow keys or buttons to navigate
+                    </span>
                   </div>
-                </ScrollArea>
+                )}
               </CardContent>
             </Card>
           </div>
