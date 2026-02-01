@@ -39,7 +39,7 @@ const timelineEvents: TimelineEvent[] = [
       'Bill presented to National Assembly in March 2024'
     ],
     sources: [
-      { label: 'Treasury Policy PDF', url: 'https://newsite.treasury.go.ke' }
+      { label: 'Treasury Policy PDF', url: 'https://www.treasury.go.ke/wp-content/uploads/2024/03/National-Policy-on-Virtual-Assets-and-VASPs.pdf' }
     ]
   },
   {
@@ -54,7 +54,8 @@ const timelineEvents: TimelineEvent[] = [
       '44-page bill covering comprehensive VASP regulation (47 sections)'
     ],
     sources: [
-      { label: 'Parliament of Kenya', url: 'https://parliament.go.ke/node/23602' }
+      { label: 'Parliament of Kenya Bill Page', url: 'https://www.parliament.go.ke/node/23602' },
+      { label: 'Bill PDF (Parliament)', url: 'https://www.parliament.go.ke/sites/default/files/2025-04/The%20Virtual%20Asset%20Service%20Providers%20Bill%2C%202025.pdf' }
     ]
   },
   {
@@ -159,8 +160,9 @@ const timelineEvents: TimelineEvent[] = [
       'Licensing requirements now in effect'
     ],
     sources: [
-      { label: 'EY Tax News', url: 'https://taxnews.ey.com/news/2025-2314-kenya-enacts-virtual-asset-service-providers-act-2025-a-new-regulatory-era' },
-      { label: 'CBK Public Notice', url: 'https://centralbank.go.ke' }
+      { label: 'EY Tax News - Kenya VASP Act', url: 'https://taxnews.ey.com/news/2025-2314-kenya-enacts-virtual-asset-service-providers-act-2025-a-new-regulatory-era' },
+      { label: 'CBK Public Notice', url: 'https://www.centralbank.go.ke/uploads/banking_circulars/2025/VASP-Act-Implementation-Notice.pdf' },
+      { label: 'Kenya Gazette (21 Oct 2025)', url: 'https://kenyalaw.org/kenya_gazette/gazette/volume/3254' }
     ]
   },
   {
